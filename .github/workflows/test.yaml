@@ -73,6 +73,6 @@ jobs:
             task install_dependencies_ci
 
         - name: Run tests
-          working-directory: Frontend/react-recoil
+          working-directory: ${{ matrix.dir_changed }}
           run: |
             task test
