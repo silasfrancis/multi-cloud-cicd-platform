@@ -5,11 +5,6 @@ vars:
   IMAGE_TAG: "latest"
   ENV: "dev"
 
-includes:
-  utils:
-    taskfile: ../utils/Taskfile.yaml
-    dir: ..
-
 tasks:
   install_dependencies:
     desc: "Install project dependencies"
