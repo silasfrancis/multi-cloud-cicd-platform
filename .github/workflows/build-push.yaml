@@ -14,19 +14,19 @@ on:
           - 'Frontend/react-recoil/**'
           - 'Backend/fastapi/**'
     workflow_dispatch:
-      # inputs:
-      #   service:
-      #     description: 'Service path that triggered the workflow'
-      #     required: true
-      #     type: choice
-      #     options:
-      #       - 'Backend/fastapi'
-      #       - 'Frontend/react-recoil'
+      inputs:
+        service:
+          description: 'Service path that triggered the workflow'
+          required: true
+          type: choice
+          options:
+            - 'Backend/fastapi'
+            - 'Frontend/react-recoil'
 
 jobs:
   filter-updated-directories:
     runs-on: ubuntu-24.04
-      if: |
+    if: |
       github.event_name != 'workflow_run' ||
       github.event.workflow_run.conclusion == 'success'
     outputs:
