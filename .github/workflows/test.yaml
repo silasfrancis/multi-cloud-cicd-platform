@@ -5,7 +5,7 @@ on:
         branches:
           - main
           - dev
-    pull_request:
+    pull_request: 
         branches:
           - main
           - dev
@@ -67,10 +67,10 @@ jobs:
             name: "task"
             version: v3.46.4
         
-        - name: Install app dependencies
-          working-directory: ${{ matrix.dir_changed }}
-          run: |
-            task install_dependencies_ci
+        # - name: Install app dependencies
+        #   working-directory: ${{ matrix.dir_changed }}
+        #   run: |
+        #     task install_dependencies_ci
 
         - name: Run tests
           working-directory: Frontend/react-recoil
