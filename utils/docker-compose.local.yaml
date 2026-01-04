@@ -25,9 +25,9 @@ services:
       dockerfile: Dockerfile.api
     container_name: fastapi_real_world_cont
     env_file:
-      - .env
+      - ./.env
     environment:
-      APP_ENV: dev
+      APP_ENV: production
       POSTGRES_HOST: postgres
       POSTGRES_DB: ${DBNAME}
       POSTGRES_USER: ${DBUSER}

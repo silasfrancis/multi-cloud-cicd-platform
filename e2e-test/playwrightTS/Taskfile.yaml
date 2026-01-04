@@ -1,0 +1,18 @@
+version: "3"
+
+tasks:
+  install-dependencies:
+    desc: "Install project dependencies"
+    cmds:
+      - npm install
+  
+  install_dependencies_ci:
+    desc: "Install project dependencies for CI"
+    cmds:
+      - npm ci
+      
+  run-tests:
+    desc: "Run tests using Playwright"
+    cmds:
+      - |
+        npx playwright test
