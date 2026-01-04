@@ -67,12 +67,12 @@ jobs:
             name: "task"
             version: v3.46.4
         
-        # - name: Install app dependencies
-        #   working-directory: ${{ matrix.dir_changed }}
-        #   run: |
-        #     task install_dependencies_ci
+        - name: Install app dependencies
+          working-directory: ${{ matrix.dir_changed }}
+          run: |
+            task -s ${{ matrix.dir_changed }}/Taskfile.yaml install_dependencies_ci
 
         - name: Run tests
           working-directory: Frontend/react-recoil
           run: |
-            task test
+            task -s ${{ matrix.dir_changed }}/Taskfile.yaml test
