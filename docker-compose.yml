@@ -1,8 +1,6 @@
 services:
   postgres:
-    build:
-      context: ./Backend/postgres_db
-      dockerfile: Dockerfile.postgres
+    image: postgres:15-alpine
     container_name: postgress_db_real_world_cont
     env_file:
       - .env

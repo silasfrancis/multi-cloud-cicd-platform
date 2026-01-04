@@ -1,0 +1,6 @@
+Backend/fastapi:
+    - Backend/fastapi/**
+    - .github/workflows/test.yaml
+Frontend/react-recoil:
+    - Frontend/react-recoil/**
+    - .github/workflows/test.yaml
