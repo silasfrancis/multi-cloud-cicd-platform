@@ -1,6 +1,11 @@
 name: Build and Push Docker Images
 
 on:
+    workflow_run:
+      workflows:
+        - Run unit tests
+      types:
+        - completed
     push:
         branches:
           - main
@@ -21,6 +26,9 @@ on:
 jobs:
   filter-updated-directories:
     runs-on: ubuntu-24.04
+      if: |
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     outputs:
         dir_changed: ${{ steps.filter_files.outputs.changes}}
     steps:
