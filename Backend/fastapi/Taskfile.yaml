@@ -25,7 +25,7 @@ tasks:
   test:
     desc: "Run tests"
     cmds:
-      - python -m pytest tests/
+      - python -m pytest ./tests/
   
   build-container:
     desc: "Build container image"
