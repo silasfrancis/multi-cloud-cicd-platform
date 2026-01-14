@@ -16,9 +16,13 @@ tasks:
   generate-version-tag:
     desc: "Combine the image repo with the version tag"
     vars:
-      SERVICE_RELEASE_TAG: "{{.CLI_ARGS}}"
-      IMAGE_REPO: "{{.IMAGE_REPO}}"
-      ENVIRONMENT: "{{.ENVIRONMENT}}"
+      ARGS: "{{.CLI_ARGS}}"
+      SERVICE_RELEASE_TAG:
+        sh: echo "{{.ARGS}}" | awk '{print $1}'
+      IMAGE_REPO:
+        sh: echo "{{.ARGS}}" | awk '{print $2}'
+      ENVIRONMENT:
+        sh: echo "{{.ARGS}}" | awk '{print $3}'
       VERSION:
         sh: task -s generate-version -- {{.SERVICE_RELEASE_TAG}}
     cmds:
@@ -51,9 +55,13 @@ tasks:
   generate-extended-version-tag:
     desc: "Combine the image repo with the version tag"
     vars:
-      SERVICE_RELEASE_TAG: "{{.CLI_ARGS}}"
-      IMAGE_REPO: "{{.IMAGE_REPO}}"
-      ENVIRONMENT: "{{.ENVIRONMENT}}"
+      ARGS: "{{.CLI_ARGS}}"
+      SERVICE_RELEASE_TAG:
+        sh: echo "{{.ARGS}}" | awk '{print $1}'
+      IMAGE_REPO:
+        sh: echo "{{.ARGS}}" | awk '{print $2}'
+      ENVIRONMENT:
+        sh: echo "{{.ARGS}}" | awk '{print $3}'
       VERSION:
         sh: task -s generate-extended-version -- {{.SERVICE_RELEASE_TAG}}
     cmds:
