@@ -81,7 +81,7 @@ jobs:
         - name: Get image repo
           id: get_image_repo
           run: |
-            IMAGE_REPO=$(task -s utils/Taskfile.yaml -- "${{ matrix.dir_changed }}" | tail -n 1)
+            IMAGE_REPO=$(task -t utils/Taskfile.yaml -- "${{ matrix.dir_changed }}" | tail -n 1)
             echo "IMAGE_REPO=$IMAGE_REPO" >> $GITHUB_OUTPUT
 
         - name: Compute image tags
@@ -92,11 +92,11 @@ jobs:
             IMAGE_REPOS: ${{ steps.get_image_repo.outputs.IMAGE_REPO }}
           run: |
             if [ "$ENVIRONMENT" = "main" ]; then
-              IMAGE_VERSION=$(task -s ./utils/Taskfile.yaml -- generate-version -- "${SERVICE}")
-              IMAGE_TAG=$(task -s ./utils/Taskfile.yaml -- generate-version-tag -- "${SERVICE}" IMAGE_REPO="${IMAGE_REPOS}" ENVIRONMENT="${ENVIRONMENT}" | tail -n 1)
+              IMAGE_VERSION=$(task -t ./utils/Taskfile.yaml -- generate-version -- "${SERVICE}")
+              IMAGE_TAG=$(task -t ./utils/Taskfile.yaml -- generate-version-tag -- "${SERVICE}" IMAGE_REPO="${IMAGE_REPOS}" ENVIRONMENT="${ENVIRONMENT}" | tail -n 1)
             else
-              IMAGE_VERSION=$(task -s ./utils/Taskfile.yaml -- generate-extended-version -- "${SERVICE}")
-              IMAGE_TAG=$(task -s ./utils/Taskfile.yaml -- generate-extended-version-tag -- "${SERVICE}" IMAGE_REPO="${IMAGE_REPOS}" ENVIRONMENT="${ENVIRONMENT}" | tail -n 1)
+              IMAGE_VERSION=$(task -t ./utils/Taskfile.yaml -- generate-extended-version -- "${SERVICE}")
+              IMAGE_TAG=$(task -t ./utils/Taskfile.yaml -- generate-extended-version-tag -- "${SERVICE}" IMAGE_REPO="${IMAGE_REPOS}" ENVIRONMENT="${ENVIRONMENT}" | tail -n 1)
             fi
             echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_OUTPUT
             echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
