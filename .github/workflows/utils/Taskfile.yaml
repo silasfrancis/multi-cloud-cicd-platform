@@ -1,9 +1,16 @@
 version: "3"
 
 tasks:
-  Backend/fastapi: 
-    cmds: 
-      - echo "silasfrancis/devops-api-"
-  Frontend/react-recoil: 
-    cmds: 
-      - echo "silasfrancis/devops-client-"
+  generate-image-repo:
+    vars:
+      SERVICE: "{{.ARGS}}"
+    cmds:
+      - |
+        case "{{.SERVICE}}" in
+          "Backend/fastapi")
+            echo "silasfrancis/devops-api-"
+            ;;
+          "Frontend/react-recoil")
+            echo "silasfrancis/devops-client-"
+            ;;
+        esac
