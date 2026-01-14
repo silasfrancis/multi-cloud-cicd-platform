@@ -103,10 +103,12 @@ jobs:
         
         - name: Set docker image target
           id: docker_target
+          env:
+            ENVIRONMENT: ${{ github.ref_name }}
           run: |
-            if [ ${github.ref_name} = "main" ]; then
+            if [ ${ENVIRONMENT} = "main" ]; then
               echo "TARGET=production" >> $GITHUB_OUTPUT
-            elif [ ${github.ref_name} = "dev" ]; then
+            elif [ ${ENVIRONMENT} = "dev" ]; then
               echo "TARGET=dev" >> $GITHUB_OUTPUT
             else
               echo "TARGET=staging" >> $GITHUB_OUTPUT
