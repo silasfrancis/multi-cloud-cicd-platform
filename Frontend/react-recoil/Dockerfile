@@ -1,5 +1,5 @@
 # ===== Base stage =====
-FROM node:20-bullseye-slim AS base
+FROM node:24-bullseye-slim AS base
 WORKDIR /app
 
 FROM base AS dev
