@@ -13,4 +13,8 @@ tasks:
           "Frontend/react-recoil")
             echo "silasfrancis/devops-client-"
             ;;
+          *)
+            echo "Unknown service: {{.SERVICE}}"
+            exit 1
+            ;;
         esac
