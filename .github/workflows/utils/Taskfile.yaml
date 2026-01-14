@@ -2,19 +2,14 @@ version: "3"
 
 tasks:
   generate-image-repo:
-    vars:
-      SERVICE: "{{.ARGS}}"
     cmds:
       - |
-        case "{{.SERVICE}}" in
+        SERVICE="{{index .ARGS 0}}"
+        case "$SERVICE" in
           "Backend/fastapi")
             echo "silasfrancis/devops-api-"
             ;;
           "Frontend/react-recoil")
             echo "silasfrancis/devops-client-"
-            ;;
-          *)
-            echo "Unknown service: {{.SERVICE}}"
-            exit 1
             ;;
         esac
