@@ -81,6 +81,7 @@ jobs:
         - name: Get image repo
           id: get_image_repo
           run: |
+            echo "Dir changed: ${{ matrix.dir_changed }}"
             IMAGE_REPO=$(task -t .github/workflows/utils/Taskfile.yaml generate-image-repo -- "${{ matrix.dir_changed }}" | tail -n 1)
             echo "IMAGE_REPO=$IMAGE_REPO" >> $GITHUB_OUTPUT
 
