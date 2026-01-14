@@ -3,7 +3,7 @@ version: "3"
 tasks:
   generate-image-repo:
     vars:
-      SERVICE: "{{.ARGS}}"
+      SERVICE: "{{index .ARGS 0}}"
     cmds:
       - |
         echo "Service argument passed: {{.SERVICE}}"  # For debugging
