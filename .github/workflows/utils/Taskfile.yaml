@@ -1,10 +1,9 @@
 version: "3"
 
 tasks:
-
-Backend/fastapi: 
+  Backend/fastapi: 
     cmds: 
-        - echo "silasfrancis/devops-api"
-Frontend/react-recoil: 
+      - echo "silasfrancis/devops-api-"
+  Frontend/react-recoil: 
     cmds: 
-        - echo "silasfrancis/devops-client"
+      - echo "silasfrancis/devops-client-"
