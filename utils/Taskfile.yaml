@@ -17,6 +17,8 @@ tasks:
     desc: "Combine the image repo with the version tag"
     vars:
       SERVICE_RELEASE_TAG: "{{.CLI_ARGS}}"
+      IMAGE_REPO: "{{.IMAGE_REPO}}"
+      ENVIRONMENT: "{{.ENVIRONMENT}}"
       VERSION:
         sh: task -s generate-version -- {{.SERVICE_RELEASE_TAG}}
     cmds:
@@ -50,6 +52,8 @@ tasks:
     desc: "Combine the image repo with the version tag"
     vars:
       SERVICE_RELEASE_TAG: "{{.CLI_ARGS}}"
+      IMAGE_REPO: "{{.IMAGE_REPO}}"
+      ENVIRONMENT: "{{.ENVIRONMENT}}"
       VERSION:
         sh: task -s generate-extended-version -- {{.SERVICE_RELEASE_TAG}}
     cmds:
