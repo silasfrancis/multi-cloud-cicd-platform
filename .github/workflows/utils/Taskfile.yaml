@@ -12,6 +12,9 @@ tasks:
           "Backend/fastapi")
             echo "silasfrancis/devops-api-"
             ;;
+          "Backend/postgres_db")
+            echo "silasfrancis/db-migration-"
+            ;;
           "Frontend/react-recoil")
             echo "silasfrancis/devops-client-"
             ;;
@@ -20,3 +23,4 @@ tasks:
             exit 1
             ;;
         esac
+

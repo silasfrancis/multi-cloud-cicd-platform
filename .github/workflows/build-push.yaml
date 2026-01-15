@@ -13,6 +13,7 @@ on:
         paths:
           - 'Frontend/react-recoil/**'
           - 'Backend/fastapi/**'
+          - 'Backend/postgres_db/**'
     workflow_dispatch:
       inputs:
         service:
@@ -22,6 +23,7 @@ on:
           options:
             - 'Backend/fastapi'
             - 'Frontend/react-recoil'
+            - 'Backend/postgres_db'
 
 jobs:
   filter-updated-directories:

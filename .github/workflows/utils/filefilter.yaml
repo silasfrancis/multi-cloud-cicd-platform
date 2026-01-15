@@ -6,3 +6,5 @@ Frontend/react-recoil:
     - Frontend/react-recoil/**
     - .github/workflows/test.yaml
     - .github/workflows/build-push.yaml 
+Backend/postgres_db:
+    - Backend/postgres_db/**
