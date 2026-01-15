@@ -7,10 +7,12 @@ interface fetchWrapProps {
   signal?: AbortSignal;
 }
 
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+
 const fetchWrap = async ({ method, url, body, signal }: fetchWrapProps) => {
   const jwtToken = localStorage.getItem('jwtToken');
   const config = {
-    baseURL: 'http://localhost:8000/api',
+    baseURL: BASE_URL,
     headers: {
       Authorization: !!jwtToken ? `Token ${jwtToken}` : '',
     },

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+  namespace: {{ .Values.apps.namespace }}
+  labels:
+    app: react-recoil
+spec:
+  type: ClusterIP
+  selector:
+    app: react-recoil
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
