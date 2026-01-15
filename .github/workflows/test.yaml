@@ -32,7 +32,7 @@ jobs:
 
   test:
     runs-on: ubuntu-24.04
-    if: ${{ needs.filter-updated-directories.outputs.dir_changed != '[]' && needs.filter-updated-directories.outputs.dir_changed != '' }}
+    if: ${{ needs.filter-updated-directories.outputs.dir_changed != '[]' && needs.filter-updated-directories.outputs.dir_changed != ''}}
     needs: filter-updated-directories
     strategy:
         fail-fast: false
@@ -41,6 +41,12 @@ jobs:
     steps:
         - name: Checkout code
           uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
+        
+        - name: Skip db test
+          if: ${{ startsWith(matrix.dir_changed, 'Backend/postgres_db') }}
+          run: |
+            echo "Skipping tests for database migrations."
+            exit 0
 
         - name: Setup node environment
           if: ${{ startsWith(matrix.dir_changed, 'Frontend/react-recoil') }}
@@ -73,6 +79,7 @@ jobs:
             task install_dependencies_ci
 
         - name: Run tests
+          if: ${{ !startsWith(matrix.dir_changed, 'Backend/postgres_db') }}
           working-directory: ${{ matrix.dir_changed }}
           run: |
             task test

@@ -46,7 +46,7 @@ jobs:
   
   build-and-push:
     runs-on: ubuntu-24.04
-    if: ${{ needs.filter-updated-directories.outputs.dir_changed != '[]' && needs.filter-updated-directories.outputs.dir_changed != '' }}
+    if: ${{ needs.filter-updated-directories.outputs.dir_changed != '[]' && needs.filter-updated-directories.outputs.dir_changed != ''}}
     needs: filter-updated-directories
     permissions:
         contents: read
