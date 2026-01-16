@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fastapi
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/silasfrancis/my-devops-application.git
+    path: /k8-helm
+    targetRevision: dev
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: 
+    namespace: demo-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
