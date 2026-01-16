@@ -1,13 +1,9 @@
 version: "3"
 
 env:
-# linode
   CLUSTER_NAME: kubs-tuts
   LINODE_REGION: us-lax
-# aws
   AWS_REGION: us-west-2
-  CLUSTER_ARN: arn:aws:iam::811639244661:role/AmazonEKSAutoClusterRole
-  NODEIAMROLE_ARN: arn:aws:iam::811639244661:role/AmazonEKSAutoNodeRole
 
 tasks:
 # Linode Tasks 
@@ -103,6 +99,7 @@ tasks:
   aws:03-create-cluster:
     cmds: 
       - |
+        CLUSTER_ARN=$(aws iam get-role --role-name AmazonEKSAutoClusterRole --query "Role.Arn" --output text)
         aws eks create-cluster \
           --name ${CLUSTER_NAME} \
           --region ${AWS_REGION} \
@@ -114,6 +111,7 @@ tasks:
   aws:04-create-nodegroup:
     cmds:
       - |
+        NODEIAMROLE_ARN=$(aws iam get-role --role-name AmazonEKSAutoNodeRole --query "Role.Arn" --output text)
         SUBMITIDs=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=${CLUSTER_NAME}-subnet-* --region ${AWS_REGION} --query 'Subnets[].SubnetId' --output text)
         echo $SUBMITIDs
         aws eks create-nodegroup \
