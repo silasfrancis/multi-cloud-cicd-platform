@@ -1,6 +1,6 @@
 postgres:
   namespace: postgres-namespace
-  replicas: 2
+  replicas: 1
   database: francis_db
   image: postgres:16
   migration_image: silasfrancis/db-migration-dev
@@ -13,26 +13,26 @@ postgres:
 apps:
   namespace: apps-namespace
   fastapi:
-    replicas: 2
+    replicas: 1
     image: silasfrancis/devops-api-dev
     tag: e61dec3-0000-ge61dec3
     jwtSecretKey: c9eedbfdddfe037efd1194d18d614c4ab2467e827ec546e14ae797f463877016
     secretKey: b1c00c1ce0765d80a9fcda58c5b0b23c5768b1dd983d1aeec15171eac13f7491
     resources: 
       limits:
-        cpu: 500m
-        memory: 512Mi
+        cpu: 250m
+        memory: 256Mi
       requests:
         cpu: 100m
         memory: 128Mi
   reactRecoil:
-    replicas: 2
+    replicas: 1
     image: docker.io/silasfrancis/devops-client-dev
     tag: e61dec3-0000-ge61dec3
     resources:
       limits:
-        cpu: 200m
-        memory: 256Mi
+        cpu: 100m
+        memory: 128Mi 
       requests:
         cpu: 50m
         memory: 64Mi

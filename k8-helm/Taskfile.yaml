@@ -1,0 +1,191 @@
+version: "3"
+
+env:
+# linode
+  CLUSTER_NAME: kubs-tuts
+  LINODE_REGION: us-lax
+# aws
+  AWS_REGION: us-west-2
+  CLUSTER_ARN: arn:aws:iam::811639244661:role/AmazonEKSAutoClusterRole
+  NODEIAMROLE_ARN: arn:aws:iam::811639244661:role/AmazonEKSAutoNodeRole
+
+tasks:
+# Linode Tasks 
+  linode:00-create-network:
+    cmds:
+      - linode-cli vpcs create 
+        --label ${CLUSTER_NAME} 
+        --region ${LINODE_REGION}
+    desc: Create a private network on linode
+
+  linode:01-create-firewall:
+    cmds:
+      - |
+        linode-cli firewalls create \
+        --label ${CLUSTER_NAME} \
+        --rules.outbound_policy ACCEPT \
+        --rules.inbound_policy DROP \
+        --rules.inbound '[{"protocol": "TCP", "ports": "80, 443, 6443", "addresses": {"ipv4": ["0.0.0.0/0"], "ipv6": ["::/128"]}, "action": "ACCEPT"}]' \
+        --rules.outbound '[]'
+    desc: Create a linode firewall and set up rules
+
+  linode:02-create-cluster:
+    cmds:
+      - |
+        linode-cli lke cluster-create \
+        --label ${CLUSTER_NAME} \
+        --vpc_id $(linode-cli vpcs list --label ${CLUSTER_NAME} --json | jq -r '.[0].id') \
+        --region ${LINODE_REGION} \
+        --k8s_version 1.34 \
+        --node_pools.type g6-standard-1 --node_pools.count 2 \
+    desc: Create a Linode Kubernetes cluster
+
+  linode:03--create-all:
+    cmds:
+      - task: linode:00-create-network
+      - task: linode:01-create-firewall
+      - task: linode:02-create-cluster
+    desc: Create the Linode network, firewall, and cluster in sequence
+  
+  linode:04-get-kubeconfig:
+    desc: "Fetch and merge Linode LKE kubeconfig"
+    cmds:
+      - mkdir -p ~/.kube
+      - |
+         linode-cli lke kubeconfig-view \
+          $(linode-cli lke clusters-list --label ${CLUSTER_NAME} --json | jq -r '.[0].id') \
+          --text | sed 1d | base64 --decode > ${CLUSTER_NAME}-kubeconfig.yaml
+      - |
+          KUBECONFIG=~/.kube/config:${PWD}/${CLUSTER_NAME}-kubeconfig.yaml \
+          kubectl config view --merge --flatten > ~/.kube/config.tmp
+      - mv ~/.kube/config.tmp ~/.kube/config
+
+  linode:05-clean-up:
+    cmds:
+      - linode-cli lke cluster-delete $(linode-cli lke clusters-list --label ${CLUSTER_NAME} --json | jq -r '.[0].id')
+      - linode-cli firewalls delete $(linode-cli firewalls list --label ${CLUSTER_NAME} --json | jq -r '.[0].id')
+      - linode-cli vpcs delete $(linode-cli vpcs list --label ${CLUSTER_NAME} --json | jq -r '.[0].id')
+    desc: Clean up the Linode Kubernetes cluster and associated resources
+  
+# AWS Tasks
+  aws:00-configure-cli:
+    cmds:
+      - aws configure
+    desc: Configure the AWS CLI with your credentials and default region
+
+  aws:01-create-vpc:
+    cmds:
+      - |
+        aws ec2 create-vpc \
+          --cidr-block 10.0.0.0/16 \
+          --region ${AWS_REGION} \
+          --tag-specifications "ResourceType=vpc,Tags=[{Key=Name,Value=${CLUSTER_NAME}}]"
+    desc: Create a VPC for the EKS cluster
+
+  aws:02-create-subnets:
+    cmds:
+      - |
+        aws ec2 create-subnet \
+          --vpc-id $(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=${CLUSTER_NAME}" --region ${AWS_REGION} --query "Vpcs[0].VpcId" --output text) \
+          --cidr-block 10.0.1.0/24 \
+          --region ${AWS_REGION} \
+          --availability-zone ${AWS_REGION}a \
+          --tag-specifications "ResourceType=subnet,Tags=[{Key=Name,Value=${CLUSTER_NAME}-subnet-1}]"
+      - |
+        aws ec2 create-subnet \
+          --vpc-id $(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=${CLUSTER_NAME}" --region ${AWS_REGION} --query "Vpcs[0].VpcId" --output text) \
+          --cidr-block 10.0.2.0/24 \
+          --region ${AWS_REGION} \
+          --availability-zone ${AWS_REGION}b \
+          --tag-specifications "ResourceType=subnet,Tags=[{Key=Name,Value=${CLUSTER_NAME}-subnet-2}]"
+    desc: Create subnets for the EKS cluster
+
+  aws:03-create-cluster:
+    cmds: 
+      - |
+        aws eks create-cluster \
+          --name ${CLUSTER_NAME} \
+          --region ${AWS_REGION} \
+          --kubernetes-version 1.34 \
+          --role-arn ${CLUSTER_ARN} \
+          --resources-vpc-config subnetIds="$(aws ec2 describe-subnets --filters Name=tag:Name,Values=${CLUSTER_NAME}-subnet-* --region ${AWS_REGION} --query 'join(`,`, Subnets[].SubnetId)' --output text)"
+    desc: Create the EKS cluster
+
+  aws:04-create-nodegroup:
+    cmds:
+      - |
+        SUBMITIDs=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=${CLUSTER_NAME}-subnet-* --region ${AWS_REGION} --query 'Subnets[].SubnetId' --output text)
+        echo $SUBMITIDs
+        aws eks create-nodegroup \
+          --cluster-name ${CLUSTER_NAME} \
+          --nodegroup-name ${CLUSTER_NAME}-nodegroup \
+          --region ${AWS_REGION} \
+          --scaling-config minSize=1,maxSize=2,desiredSize=2 \
+          --disk-size 20 \
+          --subnets $SUBMITIDs \
+          --ami-type AL2_x86_64 \
+          --instance-types 't3.large' \
+          --node-role ${NODEIAMROLE_ARN}
+    desc: Create a node group for the EKS cluster
+  
+  aws:05-create-all:
+    cmds:
+      - task: aws:01-create-vpc
+      - task: aws:02-create-subnets
+      - task: aws:03-create-cluster
+      - aws eks wait cluster-active --name ${CLUSTER_NAME} --region ${AWS_REGION}
+      - task: aws:04-create-nodegroup
+      - aws eks wait nodegroup-active --cluster-name ${CLUSTER_NAME} --nodegroup-name ${CLUSTER_NAME}-nodegroup --region ${AWS_REGION}
+    desc: Create the AWS VPC, subnets, EKS cluster, and node group in sequence
+    
+  aws:06-connect-to-cluster:
+    cmds:
+      - mkdir -p ~/.kube
+      - aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig ./${CLUSTER_NAME}-kubeconfig.yaml
+      - |
+          KUBECONFIG=~/.kube/config:${PWD}/${CLUSTER_NAME}-kubeconfig.yaml \
+          kubectl config view --merge --flatten > ~/.kube/config.tmp
+      - mv ~/.kube/config.tmp ~/.kube/config
+    desc: Connect to the EKS cluster
+  
+  aws:07-clean-up:
+    cmds:
+      - aws eks delete-nodegroup --cluster-name ${CLUSTER_NAME} --nodegroup-name ${CLUSTER_NAME}-nodegroup --region ${AWS_REGION}
+      - aws eks delete-cluster --name ${CLUSTER_NAME} --region ${AWS_REGION}
+      - |
+        for SUBNET in $(aws ec2 describe-subnets --filters Name=tag:Name,Values=${CLUSTER_NAME}-subnet-* --region ${AWS_REGION} --query 'Subnets[].SubnetId' --output text); do
+            aws ec2 delete-subnet --subnet-id $SUBNET --region ${AWS_REGION};
+          done
+      - aws ec2 delete-vpc --vpc-id $(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=${CLUSTER_NAME}" --region ${AWS_REGION} --query "Vpcs[0].VpcId" --output text) --region ${AWS_REGION}
+    desc: Delete the AWS EKS cluster, node group, subnets, and
+
+# install gateway api controllers
+  1-install-kong-ingress-controller:
+      desc: "Install kong ingress controller with Gateway API support"
+      cmds:
+        - kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/latest/download/standard-install.yaml
+        - |
+          helm upgrade --install kong ingress \
+            --repo https://charts.konghq.com \
+            -n kong \
+            --create-namespace \
+            --version 0.12.0 \
+            --set ingressController.enabled=false \
+            --set gatewayController.enabled=true \
+            --set proxy.type=LoadBalancer
+
+
+  2:aws-install-gateway-api-controller:
+    desc: Install AWS Gateway API controller
+    cmds:
+      - kubectl get namespace aws-application-networking-system || kubectl create namespace aws-application-networking-system
+      - kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml
+      - |
+        helm install gateway-api-controller \
+        oci://public.ecr.aws/aws-application-networking-k8s/aws-gateway-controller-chart \
+        --version=v1.0.6 \
+        --set=serviceAccount.create=false \
+        --namespace aws-application-networking-system \
+        --set=log.level=info 
+        --set installCRDs=true
+

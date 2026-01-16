@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.apps.namespace }}
 spec:
   hostnames:
-  - {{ include "react-host-name" . | nindent 4 }}
+  - "{{ include "react-host-name" . }}"
   
   parentRefs:
     - name: react-recoil-gateway   

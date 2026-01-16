@@ -15,23 +15,20 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: postgres_db_secrets
+                  name: postgres-db-secrets
                   key: POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres_db_secrets
+                  name: postgres-db-secrets
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres_db_secrets
+                  name: postgres-db-secrets
                   key: POSTGRES_PASSWORD
             - name: DATABASE_URL
-              value: >-
-                postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)
-                @postgres-service.{{ .Values.postgres.namespace }}.svc.cluster.local:5432
-                /$(POSTGRES_DB)?sslmode=disable
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres-service.{{ .Values.postgres.namespace }}.svc.cluster.local:5432/$(POSTGRES_DB)?sslmode=disable
           args:
             - -path=/app/migrations
             - -database=$(DATABASE_URL)
