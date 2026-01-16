@@ -10,7 +10,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: migration
-          image: {{ .Values.postgres.migration_image }}
+          image: {{ .Values.postgres.migration_image }}:{{ .Values.postgres.migration_image_tag }}
           env:
             - name: POSTGRES_DB
               valueFrom:

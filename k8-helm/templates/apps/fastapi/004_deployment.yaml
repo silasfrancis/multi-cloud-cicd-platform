@@ -4,16 +4,16 @@ metadata:
   name: fastapi-deployment
   namespace: {{ .Values.apps.namespace }}
   labels:
-    app: fastapi
+    {{ include "fast-api-labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.apps.fastapi.replicas }}
   selector:
     matchLabels:
-      app: fastapi
+      {{ include "fast-api-labels" . | nindent 4 }}
   template:
     metadata:
       labels:
-        app: fastapi
+        {{ include "fast-api-labels" . | nindent 4 }}
     spec:
       serviceAccountName: fastapi-serviceaccount
       containers:
@@ -29,11 +29,11 @@ spec:
             periodSeconds: 5
           resources:
             limits:
-              memory: {{ .Values.apps.fastapi.resources.limits.memory }}
-              cpu: {{ .Values.apps.fastapi.resources.limits.cpu }}
+              memory: "{{ .Values.apps.fastapi.resources.limits.memory }}"
+              cpu: "{{ .Values.apps.fastapi.resources.limits.cpu }}"
             requests:
-              memory: {{ .Values.apps.fastapi.resources.requests.memory }}
-              cpu: {{ .Values.apps.fastapi.resources.requests.cpu }}
+              memory: "{{ .Values.apps.fastapi.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.fastapi.resources.requests.cpu }}"
           env:
             - name: SECRET_KEY
               valueFrom:

@@ -4,16 +4,16 @@ metadata:
   name: react-recoil-deployment
   namespace: {{ .Values.apps.namespace }}
   labels:
-    app: react-recoil
+    {{- include "react-recoil.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.apps.reactRecoil.replicas }}
   selector:
     matchLabels:
-      app: react-recoil
+      {{- include "react-recoil.labels" . | nindent 4 }}
   template:
     metadata:
       labels:
-        app: react-recoil
+        {{- include "react-recoil.labels" . | nindent 4 }}
     spec:
       serviceAccountName: react-recoil-serviceaccount
       containers:
@@ -29,11 +29,11 @@ spec:
             periodSeconds: 5
           resources:
             limits:
-              memory: {{ .Values.apps.reactRecoil.resources.limits.memory }}
-              cpu: {{ .Values.apps.reactRecoil.resources.limits.cpu }}
+              memory: "{{ .Values.apps.reactRecoil.resources.limits.memory }}"
+              cpu: "{{ .Values.apps.reactRecoil.resources.limits.cpu }}"
             requests:
-              memory: {{ .Values.apps.reactRecoil.resources.requests.memory }}
-              cpu: {{ .Values.apps.reactRecoil.resources.requests.cpu }}
+              memory: "{{ .Values.apps.reactRecoil.resources.requests.memory }}"
+              cpu: "{{ .Values.apps.reactRecoil.resources.requests.cpu }}"
           env:
             - name: REACT_APP_API_URL
               valueFrom:
