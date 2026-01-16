@@ -126,3 +126,84 @@ jobs:
             platforms: linux/amd64
             cache-from: type=gha
             cache-to: type=gha,mode=max
+            
+        - name: Export service build info
+          id: export
+          run: |
+            echo "{\"service\":\"${{ matrix.dir_changed }}\",\"image_tag\":\"${{ steps.image_tags.outputs.IMAGE_TAG }}\"}" > output.json
+
+        - name: upload matrix artifact
+          uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+          with:
+            name: matrix-output-${{ matrix.dir_changed }}
+            path: output.json
+
+        
+  update-gitops:
+    needs: build-and-push
+    runs-on: ubuntu-24.04
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
+        
+        - name: Download matrix outputs
+          uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+          with:
+            path: matrix_outputs #path to place all downloads
+        
+        - name: Install jq
+          uses:  supplypike/setup-bin@1fafb085795af4a3f183502f3a9dffa8f7b83217
+          with:
+            uri: "https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-linux-amd64"
+            name: "jq"
+            version: "1.8.1"
+
+        - name: Install yq
+          uses:  supplypike/setup-bin@1fafb085795af4a3f183502f3a9dffa8f7b83217
+          with:
+            uri: "https://github.com/mikefarah/yq/releases/download/v4.50.1/yq_linux_amd64.tar.gz"
+            name: "yq"
+            version: v4.50.1
+
+        - run: |
+            jq --version
+            yq --version
+
+        - name: Update helm values for all services
+          run: | 
+             for folder in matrix_outputs/*; do
+              FILE="$folder/output.json"
+              SERVICE=$(jq -r '.service' "$FILE")
+              IMAGE_TAG=$(jq -r '.image_tag' "$FILE")
+
+              echo "Updating $SERVICE -> $IMAGE_TAG"
+
+              # Use pattern matching in bash
+              if [[ "$SERVICE" == *"fastapi"* ]]; then
+                yq -i '.apps.fastapi.image = "'"$IMAGE_TAG"'"' k8-helm/env/${{ github.ref_name }}/values.yaml
+              elif [[ "$SERVICE" == *"react-recoil"* ]]; then
+                yq -i '.apps.reactRecoil.image = "'"$IMAGE_TAG"'"' k8-helm/env/${{ github.ref_name }}/values.yaml
+              elif [[ "$SERVICE" == *"postgres_db"* ]]; then
+                yq -i '.postgres.image = "'"$IMAGE_TAG"'"' k8-helm/env/${{ github.ref_name }}/values.yaml
+              else
+                echo "Unknown service: $SERVICE, skipping"
+              fi
+              done
+          
+        - name: Commit and push Helm updates
+          run: |
+                git config user.name "silasfrancis"
+                git config user.email "silasfrancis07@gmail.com"
+
+                git add k8-helm/env/${{ github.ref_name }}/values.yaml
+
+                if git diff --cached --quiet; then
+                  echo "No changes to commit"
+                else
+                  git commit -m "Update Helm images for ${{ github.ref_name }}"
+                  git push
+                fi
+
+
+
+
