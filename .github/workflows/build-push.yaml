@@ -49,7 +49,7 @@ jobs:
     if: ${{ needs.filter-updated-directories.outputs.dir_changed != '[]' && needs.filter-updated-directories.outputs.dir_changed != ''}}
     needs: filter-updated-directories
     permissions:
-        contents: read
+        contents: write
         packages: write
         id-token: write
     strategy:
@@ -136,11 +136,34 @@ jobs:
           id: svc
           run: echo "SERVICE_NAME=$(echo '${{ matrix.dir_changed }}' | sed 's|.*/||')" >> $GITHUB_OUTPUT
 
-        - name: upload matrix artifact
-          uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-          with:
-            name: matrix-output-${{ steps.svc.outputs.SERVICE_NAME }}
-            path: output.json
+        # - name: upload matrix artifact
+        #   uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        #   with:
+        #     name: matrix-output-${{ steps.svc.outputs.SERVICE_NAME }}
+        #     path: output.json
+
+        - name: Persist build info to repo
+          env:
+            SERVICE_NAME: ${{ steps.svc.outputs.SERVICE_NAME }}
+            ENVIRONMENT: ${{ github.ref_name }}
+            GIT_USER: ${{ github.actor }}
+            GIT_USER_EMAIL: ${{ vars.GIT_USER_EMAIL }}
+          run: |
+            set -e
+
+            TARGET_DIR="k8-helm/env/$ENV_DIR"
+            TARGET_FILE="$TARGET_DIR/$SERVICE_NAME.json"
+
+            mkdir -p "$TARGET_DIR"
+            mv output.json "$TARGET_FILE"
+
+            git config user.name "$GIT_USER"
+            git config user.email "$GIT_USER_EMAIL"
+
+            git add "$TARGET_FILE"
+            git commit -m "ci: update build info for $SERVICE_NAME ($ENV_DIR)" || echo "No changes to commit"
+            git push origin ${{ github.ref_name }}
+
 
 
 

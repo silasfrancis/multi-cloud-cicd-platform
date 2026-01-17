@@ -41,24 +41,29 @@ jobs:
 
         - name: Update helm values for all services
           run: | 
-             for folder in matrix_outputs/*; do
-              FILE="$folder/output.json"
-              SERVICE=$(jq -r '.service' "$FILE")
-              IMAGE_TAG=$(jq -r '.image_tag' "$FILE")
+            ENV_DIR="${{ github.ref_name }}"
+            JSON_DIR="k8-helm/env/$ENV_DIR"
+            VALUES_FILE="$JSON_DIR/values.yaml"
+
+            for file in $JSON_DIR/*.json; do
+              [ -e "$file" ] || continue  # skip if no JSON files
+
+              SERVICE=$(jq -r '.service' "$file")
+              IMAGE_TAG=$(jq -r '.image_tag' "$file")
 
               echo "Updating $SERVICE -> $IMAGE_TAG"
 
-              # Use pattern matching in bash
+              # Update Helm values using yq
               if [[ "$SERVICE" == *"fastapi"* ]]; then
-                yq -i '.apps.fastapi.image = "'"$IMAGE_TAG"'"' k8-helm/env/${{ github.ref_name }}/values.yaml
+              yq -i '.apps.fastapi.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               elif [[ "$SERVICE" == *"react-recoil"* ]]; then
-                yq -i '.apps.reactRecoil.image = "'"$IMAGE_TAG"'"' k8-helm/env/${{ github.ref_name }}/values.yaml
+              yq -i '.apps.reactRecoil.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               elif [[ "$SERVICE" == *"postgres_db"* ]]; then
-                yq -i '.postgres.image = "'"$IMAGE_TAG"'"' k8-helm/env/${{ github.ref_name }}/values.yaml
+              yq -i '.postgres.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               else
-                echo "Unknown service: $SERVICE, skipping"
+              echo "Unknown service: $SERVICE, skipping"
               fi
-              done
+            done
           
         - name: Commit and push Helm updates
           env: 
