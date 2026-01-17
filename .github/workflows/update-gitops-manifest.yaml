@@ -16,10 +16,10 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
         
-        - name: Download matrix outputs
-          uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
-          with:
-            path: matrix_outputs #path to place all downloads
+        # - name: Download matrix outputs
+        #   uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        #   with:
+        #     path: matrix_outputs #path to place all downloads
         
         - name: Install jq
           uses:  supplypike/setup-bin@1fafb085795af4a3f183502f3a9dffa8f7b83217
