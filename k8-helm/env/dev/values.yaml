@@ -7,16 +7,14 @@ postgres:
   password: francisdb
   port: 5432
   user: francis_user
-
-
 apps:
   namespace: apps-namespace
   fastapi:
     replicas: 1
-    image: silasfrancis/devops-api-dev:e61dec3-0000-ge61dec3
+    image: silasfrancis/devops-api-dev:070edd3-0000-g070edd3
     jwtSecretKey: c9eedbfdddfe037efd1194d18d614c4ab2467e827ec546e14ae797f463877016
     secretKey: b1c00c1ce0765d80a9fcda58c5b0b23c5768b1dd983d1aeec15171eac13f7491
-    resources: 
+    resources:
       limits:
         cpu: 250m
         memory: 256Mi
@@ -29,7 +27,7 @@ apps:
     resources:
       limits:
         cpu: 100m
-        memory: 128Mi 
+        memory: 128Mi
       requests:
         cpu: 50m
         memory: 64Mi
