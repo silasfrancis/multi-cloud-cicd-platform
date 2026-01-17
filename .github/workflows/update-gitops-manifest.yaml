@@ -59,7 +59,7 @@ jobs:
               elif [[ "$SERVICE" == *"react-recoil"* ]]; then
               yq -i '.apps.reactRecoil.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               elif [[ "$SERVICE" == *"postgres_db"* ]]; then
-              yq -i '.postgres.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
+              yq -i '.postgres.migration_image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               else
               echo "Unknown service: $SERVICE, skipping"
               fi

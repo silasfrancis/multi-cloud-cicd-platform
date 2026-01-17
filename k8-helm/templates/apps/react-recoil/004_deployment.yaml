@@ -18,7 +18,7 @@ spec:
       serviceAccountName: react-recoil-serviceaccount
       containers:
         - name: react-recoil-container
-          image: {{ .Values.apps.reactRecoil.image }}:{{ .Values.apps.reactRecoil.tag }}
+          image: {{ .Values.apps.reactRecoil.image }}
           ports:
             - containerPort: 3000
           readinessProbe:

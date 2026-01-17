@@ -151,7 +151,7 @@ jobs:
           run: |
             set -e
 
-            TARGET_DIR="k8-helm/env/$ENV_DIR"
+            TARGET_DIR="k8-helm/env/$ENVIRONMENT"
             TARGET_FILE="$TARGET_DIR/$SERVICE_NAME.json"
 
             mkdir -p "$TARGET_DIR"
@@ -161,7 +161,7 @@ jobs:
             git config user.email "$GIT_USER_EMAIL"
 
             git add "$TARGET_FILE"
-            git commit -m "ci: update build info for $SERVICE_NAME ($ENV_DIR)" || echo "No changes to commit"
+            git commit -m "ci: update build info for $SERVICE_NAME ($ENVIRONMENT)" || echo "No changes to commit"
             git push origin ${{ github.ref_name }}
 
 

@@ -18,7 +18,7 @@ spec:
       serviceAccountName: fastapi-serviceaccount
       containers:
         - name: fastapi-container
-          image: {{ .Values.apps.fastapi.image }}:{{ .Values.apps.fastapi.tag }}
+          image: {{ .Values.apps.fastapi.image }}
           ports:
             - containerPort: 8000
           readinessProbe:
