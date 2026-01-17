@@ -131,11 +131,15 @@ jobs:
           id: export
           run: |
             echo "{\"service\":\"${{ matrix.dir_changed }}\",\"image_tag\":\"${{ steps.image_tags.outputs.IMAGE_TAG }}\"}" > output.json
+        
+        - name: cleanup service name
+          id: svc
+          run: echo "SERVICE_NAME=$(echo '${{ matrix.dir_changed }}' | sed 's|.*/||')" >> $GITHUB_OUTPUT
 
         - name: upload matrix artifact
           uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
           with:
-            name: matrix-output-${{ matrix.dir_changed }}
+            name: matrix-output-${{ steps.svc.outputs.SERVICE_NAME }}
             path: output.json
 
 
