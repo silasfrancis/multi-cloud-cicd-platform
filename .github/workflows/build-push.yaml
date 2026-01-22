@@ -52,6 +52,9 @@ jobs:
         contents: write
         packages: write
         id-token: write
+    concurrency:
+      group: git-write-${{ github.ref_name }}
+      cancel-in-progress: false
     strategy:
         fail-fast: false
         matrix:
@@ -136,12 +139,6 @@ jobs:
           id: svc
           run: echo "SERVICE_NAME=$(echo '${{ matrix.dir_changed }}' | sed 's|.*/||')" >> $GITHUB_OUTPUT
 
-        # - name: upload matrix artifact
-        #   uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-        #   with:
-        #     name: matrix-output-${{ steps.svc.outputs.SERVICE_NAME }}
-        #     path: output.json
-
         - name: Persist build info to repo
           env:
             SERVICE_NAME: ${{ steps.svc.outputs.SERVICE_NAME }}
@@ -162,6 +159,7 @@ jobs:
 
             git add "$TARGET_FILE"
             git commit -m "ci: update build info for $SERVICE_NAME ($ENVIRONMENT)" || echo "No changes to commit"
+            git pull --rebase origin ${{ github.ref_name }}
             git push origin ${{ github.ref_name }}
 
 
