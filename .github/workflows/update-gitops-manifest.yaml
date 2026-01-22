@@ -8,10 +8,32 @@ on:
             - completed
 
 jobs:
+  filter-updated-directories:
+    runs-on: ubuntu-24.04
+    if: |
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+    outputs:
+        dir_changed: ${{ steps.filter_files.outputs.changes}}
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
+
+        - name: Filter changed files
+          id: filter_files
+          uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+          with:
+                token: ${{ github.token || secrets.GITHUB_TOKEN }}
+                filters: .github/workflows/utils/filefilter.yaml
+
   update-gitops:
     runs-on: ubuntu-24.04
     permissions:
       contents: write
+    strategy:
+        fail-fast: false
+        matrix:
+            dir_changed: ${{ fromJson(needs.filter-updated-directories.outputs.dir_changed) }}
     steps:
         - name: Checkout code
           uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
@@ -34,10 +56,20 @@ jobs:
             jq --version
             yq --version
 
+        - name: Set helm dir
+          id: helm_dir
+          run: |
+              SERVICE_NAME=$(echo "${{ matrix.dir_changed }}" | sed 's|.*/||')
+              if [[ "$SERVICE_NAME" == "postgres_db" ]]; then
+                echo "JSON_DIR=helm/db/env/${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+              else
+                echo "JSON_DIR=helm/app/env/${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+              fi
+
         - name: Update helm values for all services
           run: | 
             ENV_DIR="${{ github.ref_name }}"
-            JSON_DIR="k8-helm/env/$ENV_DIR"
+            JSON_DIR="${{ steps.helm_dir.outputs.JSON_DIR }}"
             VALUES_FILE="$JSON_DIR/values.yaml"
 
             for file in $JSON_DIR/*.json; do
@@ -68,7 +100,7 @@ jobs:
                 git config user.name "$GIT_USER"
                 git config user.email "$GIT_USER_EMAIL"
 
-                git add k8-helm/env/${{ github.ref_name }}/values.yaml
+                git add helm/**/values.yaml
 
                 if git diff --cached --quiet; then
                   echo "No changes to commit"

@@ -52,13 +52,13 @@ jobs:
         contents: write
         packages: write
         id-token: write
-    concurrency:
-      group: git-write-${{ github.ref_name }}
-      cancel-in-progress: false
     strategy:
         fail-fast: false
         matrix:
             dir_changed: ${{ fromJson(needs.filter-updated-directories.outputs.dir_changed) }}
+    concurrency:
+      group: git-write-${{ github.ref_name }}-${{ matrix.dir_changed }}
+      cancel-in-progress: false
     steps:
         - name: Checkout code
           uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
@@ -148,7 +148,12 @@ jobs:
           run: |
             set -e
 
-            TARGET_DIR="k8-helm/env/$ENVIRONMENT"
+            if [ "$SERVICE_NAME" != "postgres_db" ]; then
+                TARGET_DIR="helm/app/env/$ENVIRONMENT"
+            else
+              TARGET_DIR="helm/db/env/$ENVIRONMENT"
+            fi
+
             TARGET_FILE="$TARGET_DIR/$SERVICE_NAME.json"
 
             mkdir -p "$TARGET_DIR"
@@ -161,9 +166,5 @@ jobs:
             git commit -m "ci: update build info for $SERVICE_NAME ($ENVIRONMENT)" || echo "No changes to commit"
             git pull --rebase origin ${{ github.ref_name }}
             git push origin ${{ github.ref_name }}
-
-
-
-
 
 

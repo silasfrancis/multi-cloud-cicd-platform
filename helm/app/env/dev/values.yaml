@@ -1,12 +1,3 @@
-postgres:
-  namespace: postgres-namespace
-  replicas: 1
-  database: francis_db
-  image: postgres:16
-  migration_image: silasfrancis/db-migration-dev:91d0e37-0000-g91d0e37
-  password: francisdb
-  port: 5432
-  user: francis_user
 apps:
   namespace: apps-namespace
   fastapi:

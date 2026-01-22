@@ -10,6 +10,6 @@ lefranc.com
 app: fastapi
 {{- end }}
 
-{{- define "k8-helm.name" -}}
+{{- define "app.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

@@ -7,11 +7,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/silasfrancis/my-devops-application.git
-    path: k8-helm
-    targetRevision: main
+    path: helm/app
+    targetRevision: dev
     helm:
       valueFiles:
-        - ./env/main/values.yaml
+        - ./env/dev/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: demo-app
