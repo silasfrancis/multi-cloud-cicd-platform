@@ -24,3 +24,10 @@ apps:
       requests:
         cpu: 50m
         memory: 64Mi
+
+postgres:
+  namespace: postgres-namespace
+  database: francis_db
+  password: francisdb
+  port: 5432
+  user: francis_user

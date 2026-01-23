@@ -7,7 +7,7 @@ interface fetchWrapProps {
   signal?: AbortSignal;
 }
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const BASE_URL =  process.env.REACT_APP_API_URL || 'http://api.lefrancis.com/api' || 'http://localhost:8000/api';
 
 const fetchWrap = async ({ method, url, body, signal }: fetchWrapProps) => {
   const jwtToken = localStorage.getItem('jwtToken');

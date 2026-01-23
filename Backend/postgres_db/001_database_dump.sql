@@ -1,5 +1,5 @@
 --
--- PostgreSQL database dump
+-- francis_userQL database dump
 --
 
 -- Dumped from database version 17.5
@@ -22,7 +22,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: alembic_version; Type: TABLE; Schema: public; Owner: postgres
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public.alembic_version (
@@ -30,10 +30,10 @@ CREATE TABLE public.alembic_version (
 );
 
 
-ALTER TABLE public.alembic_version OWNER TO postgres;
+ALTER TABLE public.alembic_version OWNER TO francis_user;
 
 --
--- Name: article; Type: TABLE; Schema: public; Owner: postgres
+-- Name: article; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public.article (
@@ -48,10 +48,10 @@ CREATE TABLE public.article (
 );
 
 
-ALTER TABLE public.article OWNER TO postgres;
+ALTER TABLE public.article OWNER TO francis_user;
 
 --
--- Name: article_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: article_id_seq; Type: SEQUENCE; Schema: public; Owner: francis_user
 --
 
 CREATE SEQUENCE public.article_id_seq
@@ -63,17 +63,17 @@ CREATE SEQUENCE public.article_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.article_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.article_id_seq OWNER TO francis_user;
 
 --
--- Name: article_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: article_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: francis_user
 --
 
 ALTER SEQUENCE public.article_id_seq OWNED BY public.article.id;
 
 
 --
--- Name: article_tag; Type: TABLE; Schema: public; Owner: postgres
+-- Name: article_tag; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public.article_tag (
@@ -83,10 +83,10 @@ CREATE TABLE public.article_tag (
 );
 
 
-ALTER TABLE public.article_tag OWNER TO postgres;
+ALTER TABLE public.article_tag OWNER TO francis_user;
 
 --
--- Name: comment; Type: TABLE; Schema: public; Owner: postgres
+-- Name: comment; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public.comment (
@@ -99,10 +99,10 @@ CREATE TABLE public.comment (
 );
 
 
-ALTER TABLE public.comment OWNER TO postgres;
+ALTER TABLE public.comment OWNER TO francis_user;
 
 --
--- Name: comment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: comment_id_seq; Type: SEQUENCE; Schema: public; Owner: francis_user
 --
 
 CREATE SEQUENCE public.comment_id_seq
@@ -114,17 +114,17 @@ CREATE SEQUENCE public.comment_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.comment_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.comment_id_seq OWNER TO francis_user;
 
 --
--- Name: comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: francis_user
 --
 
 ALTER SEQUENCE public.comment_id_seq OWNED BY public.comment.id;
 
 
 --
--- Name: favorite; Type: TABLE; Schema: public; Owner: postgres
+-- Name: favorite; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public.favorite (
@@ -134,10 +134,10 @@ CREATE TABLE public.favorite (
 );
 
 
-ALTER TABLE public.favorite OWNER TO postgres;
+ALTER TABLE public.favorite OWNER TO francis_user;
 
 --
--- Name: follower; Type: TABLE; Schema: public; Owner: postgres
+-- Name: follower; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public.follower (
@@ -147,10 +147,10 @@ CREATE TABLE public.follower (
 );
 
 
-ALTER TABLE public.follower OWNER TO postgres;
+ALTER TABLE public.follower OWNER TO francis_user;
 
 --
--- Name: tag; Type: TABLE; Schema: public; Owner: postgres
+-- Name: tag; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public.tag (
@@ -160,10 +160,10 @@ CREATE TABLE public.tag (
 );
 
 
-ALTER TABLE public.tag OWNER TO postgres;
+ALTER TABLE public.tag OWNER TO francis_user;
 
 --
--- Name: tag_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: tag_id_seq; Type: SEQUENCE; Schema: public; Owner: francis_user
 --
 
 CREATE SEQUENCE public.tag_id_seq
@@ -175,17 +175,17 @@ CREATE SEQUENCE public.tag_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.tag_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.tag_id_seq OWNER TO francis_user;
 
 --
--- Name: tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: francis_user
 --
 
 ALTER SEQUENCE public.tag_id_seq OWNED BY public.tag.id;
 
 
 --
--- Name: user; Type: TABLE; Schema: public; Owner: postgres
+-- Name: user; Type: TABLE; Schema: public; Owner: francis_user
 --
 
 CREATE TABLE public."user" (
@@ -200,10 +200,10 @@ CREATE TABLE public."user" (
 );
 
 
-ALTER TABLE public."user" OWNER TO postgres;
+ALTER TABLE public."user" OWNER TO francis_user;
 
 --
--- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: francis_user
 --
 
 CREATE SEQUENCE public.user_id_seq
@@ -215,45 +215,45 @@ CREATE SEQUENCE public.user_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.user_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.user_id_seq OWNER TO francis_user;
 
 --
--- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: francis_user
 --
 
 ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
 
 
 --
--- Name: article id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: article id; Type: DEFAULT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.article ALTER COLUMN id SET DEFAULT nextval('public.article_id_seq'::regclass);
 
 
 --
--- Name: comment id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: comment id; Type: DEFAULT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.comment ALTER COLUMN id SET DEFAULT nextval('public.comment_id_seq'::regclass);
 
 
 --
--- Name: tag id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: tag id; Type: DEFAULT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.tag ALTER COLUMN id SET DEFAULT nextval('public.tag_id_seq'::regclass);
 
 
 --
--- Name: user id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: user id; Type: DEFAULT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
 
 
 --
--- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public.alembic_version (version_num) FROM stdin;
@@ -262,7 +262,7 @@ COPY public.alembic_version (version_num) FROM stdin;
 
 
 --
--- Data for Name: article; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: article; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public.article (id, author_id, slug, title, description, body, created_at, updated_at) FROM stdin;
@@ -272,7 +272,7 @@ COPY public.article (id, author_id, slug, title, description, body, created_at, 
 
 
 --
--- Data for Name: article_tag; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: article_tag; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public.article_tag (article_id, tag_id, created_at) FROM stdin;
@@ -280,7 +280,7 @@ COPY public.article_tag (article_id, tag_id, created_at) FROM stdin;
 
 
 --
--- Data for Name: comment; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: comment; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public.comment (id, article_id, author_id, body, created_at, updated_at) FROM stdin;
@@ -290,7 +290,7 @@ COPY public.comment (id, article_id, author_id, body, created_at, updated_at) FR
 
 
 --
--- Data for Name: favorite; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: favorite; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public.favorite (user_id, article_id, created_at) FROM stdin;
@@ -298,7 +298,7 @@ COPY public.favorite (user_id, article_id, created_at) FROM stdin;
 
 
 --
--- Data for Name: follower; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: follower; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public.follower (follower_id, following_id, created_at) FROM stdin;
@@ -306,7 +306,7 @@ COPY public.follower (follower_id, following_id, created_at) FROM stdin;
 
 
 --
--- Data for Name: tag; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: tag; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public.tag (id, tag, created_at) FROM stdin;
@@ -314,7 +314,7 @@ COPY public.tag (id, tag, created_at) FROM stdin;
 
 
 --
--- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: francis_user
 --
 
 COPY public."user" (id, username, email, password_hash, bio, image_url, created_at, updated_at) FROM stdin;
@@ -323,35 +323,35 @@ COPY public."user" (id, username, email, password_hash, bio, image_url, created_
 
 
 --
--- Name: article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: francis_user
 --
 
 SELECT pg_catalog.setval('public.article_id_seq', 2, true);
 
 
 --
--- Name: comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: francis_user
 --
 
 SELECT pg_catalog.setval('public.comment_id_seq', 2, true);
 
 
 --
--- Name: tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: francis_user
 --
 
 SELECT pg_catalog.setval('public.tag_id_seq', 1, false);
 
 
 --
--- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: francis_user
 --
 
 SELECT pg_catalog.setval('public.user_id_seq', 1, true);
 
 
 --
--- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.alembic_version
@@ -359,7 +359,7 @@ ALTER TABLE ONLY public.alembic_version
 
 
 --
--- Name: article article_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: article article_pkey; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.article
@@ -367,7 +367,7 @@ ALTER TABLE ONLY public.article
 
 
 --
--- Name: article article_slug_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: article article_slug_key; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.article
@@ -375,7 +375,7 @@ ALTER TABLE ONLY public.article
 
 
 --
--- Name: article_tag article_tag_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: article_tag article_tag_pkey; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.article_tag
@@ -383,7 +383,7 @@ ALTER TABLE ONLY public.article_tag
 
 
 --
--- Name: comment comment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: comment comment_pkey; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.comment
@@ -391,7 +391,7 @@ ALTER TABLE ONLY public.comment
 
 
 --
--- Name: favorite favorite_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: favorite favorite_pkey; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.favorite
@@ -399,7 +399,7 @@ ALTER TABLE ONLY public.favorite
 
 
 --
--- Name: follower follower_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: follower follower_pkey; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.follower
@@ -407,7 +407,7 @@ ALTER TABLE ONLY public.follower
 
 
 --
--- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.tag
@@ -415,7 +415,7 @@ ALTER TABLE ONLY public.tag
 
 
 --
--- Name: tag tag_tag_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: tag tag_tag_key; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.tag
@@ -423,7 +423,7 @@ ALTER TABLE ONLY public.tag
 
 
 --
--- Name: user user_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: user user_email_key; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public."user"
@@ -431,7 +431,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public."user"
@@ -439,7 +439,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- Name: user user_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: user user_username_key; Type: CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public."user"
@@ -447,7 +447,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- Name: article article_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: article article_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.article
@@ -455,7 +455,7 @@ ALTER TABLE ONLY public.article
 
 
 --
--- Name: article_tag article_tag_article_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: article_tag article_tag_article_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.article_tag
@@ -463,7 +463,7 @@ ALTER TABLE ONLY public.article_tag
 
 
 --
--- Name: article_tag article_tag_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: article_tag article_tag_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.article_tag
@@ -471,7 +471,7 @@ ALTER TABLE ONLY public.article_tag
 
 
 --
--- Name: comment comment_article_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: comment comment_article_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.comment
@@ -479,7 +479,7 @@ ALTER TABLE ONLY public.comment
 
 
 --
--- Name: comment comment_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: comment comment_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.comment
@@ -487,7 +487,7 @@ ALTER TABLE ONLY public.comment
 
 
 --
--- Name: favorite favorite_article_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: favorite favorite_article_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.favorite
@@ -495,7 +495,7 @@ ALTER TABLE ONLY public.favorite
 
 
 --
--- Name: favorite favorite_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: favorite favorite_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.favorite
@@ -503,7 +503,7 @@ ALTER TABLE ONLY public.favorite
 
 
 --
--- Name: follower follower_follower_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: follower follower_follower_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.follower
@@ -511,7 +511,7 @@ ALTER TABLE ONLY public.follower
 
 
 --
--- Name: follower follower_following_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: follower follower_following_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: francis_user
 --
 
 ALTER TABLE ONLY public.follower
@@ -519,6 +519,6 @@ ALTER TABLE ONLY public.follower
 
 
 --
--- PostgreSQL database dump complete
+-- francis_userQL database dump complete
 --
 

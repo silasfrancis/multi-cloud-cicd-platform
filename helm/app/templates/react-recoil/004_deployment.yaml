@@ -4,16 +4,16 @@ metadata:
   name: react-recoil-deployment
   namespace: {{ .Values.apps.namespace }}
   labels:
-    {{- include "react-recoil.labels" . | nindent 4 }}
+    {{ include "react-recoil.labels" . }}
 spec:
   replicas: {{ .Values.apps.reactRecoil.replicas }}
   selector:
     matchLabels:
-      {{- include "react-recoil.labels" . | nindent 4 }}
+      {{ include "react-recoil.labels" . }}
   template:
     metadata:
       labels:
-        {{- include "react-recoil.labels" . | nindent 4 }}
+        {{ include "react-recoil.labels" . }}
     spec:
       serviceAccountName: react-recoil-serviceaccount
       containers:
@@ -21,12 +21,12 @@ spec:
           image: {{ .Values.apps.reactRecoil.image }}
           ports:
             - containerPort: 3000
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 10
-            periodSeconds: 5
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 3000
+          #   initialDelaySeconds: 120
+          #   periodSeconds: 30
           resources:
             limits:
               memory: "{{ .Values.apps.reactRecoil.resources.limits.memory }}"
@@ -40,18 +40,18 @@ spec:
                 configMapKeyRef:
                   name: react-recoil-configmap
                   key: REACT_APP_API_URL
-            # - name: HOST
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: react-recoil-config
-            #       key: HOST
-            # - name: PORT
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: react-recoil-config
-            #       key: PORT
-            # - name: CHOKIDAR_USEPOLLING
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: react-recoil-config
-            #       key: CHOKIDAR_USEPOLLING
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: react-recoil-configmap
+                  key: HOST
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: react-recoil-configmap
+                  key: PORT
+            - name: CHOKIDAR_USEPOLLING
+              valueFrom:
+                configMapKeyRef:
+                  name: react-recoil-configmap
+                  key: CHOKIDAR_USEPOLLING

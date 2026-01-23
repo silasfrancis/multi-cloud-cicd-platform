@@ -4,31 +4,15 @@ metadata:
   name: db-migration
   namespace: {{ .Values.postgres.namespace }}
 spec:
-  backoffLimit: 3
+  backoffLimit: 5
   template:
     spec:
       restartPolicy: OnFailure
       containers:
         - name: migration
           image: {{ .Values.postgres.migration_image }}
-          env:
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-db-secrets
-                  key: POSTGRES_DB
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-db-secrets
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-db-secrets
-                  key: POSTGRES_PASSWORD
-            - name: DATABASE_URL
-              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres-service.{{ .Values.postgres.namespace }}.svc.cluster.local:5432/$(POSTGRES_DB)?sslmode=disable
+          command: ["/bin/sh", "-c"]
           args:
-            - -path=/app/migrations
-            - -database=$(DATABASE_URL)
+            - migrate -path=/app/migrations \
+              -database=postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@postgres-service.{{ .Values.postgres.namespace }}.svc.cluster.local:5432/{{ .Values.postgres.database }}?sslmode=disable \
+              up

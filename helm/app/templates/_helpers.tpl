@@ -2,7 +2,7 @@
 app: react-recoil
 {{- end }}
 
-{{- define "react-host-name" -}}
+{{- define "react-host.name" -}}
 lefranc.com
 {{- end }}
 

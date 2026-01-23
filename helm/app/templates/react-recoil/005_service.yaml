@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastapi-service
+  name: react-recoil-service
   namespace: {{ .Values.apps.namespace }}
   labels:
     {{- include "react-recoil.labels" . | nindent 4 }}

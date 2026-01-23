@@ -4,27 +4,27 @@ metadata:
   name: fastapi-deployment
   namespace: {{ .Values.apps.namespace }}
   labels:
-    {{ include "fast-api-labels" . | nindent 4 }}
+    {{ include "fast-api.labels" . }}
 spec:
   replicas: {{ .Values.apps.fastapi.replicas }}
   selector:
     matchLabels:
-      {{ include "fast-api-labels" . | nindent 4 }}
+      {{ include "fast-api.labels" . }}
   template:
     metadata:
       labels:
-        {{ include "fast-api-labels" . | nindent 4 }}
+        {{ include "fast-api.labels" . }}
     spec:
       serviceAccountName: fastapi-serviceaccount
       containers:
         - name: fastapi-container
           image: {{ .Values.apps.fastapi.image }}
           ports:
-            - containerPort: 8000
+            - containerPort: 8080
           readinessProbe:
             httpGet:
               path: /
-              port: 8000
+              port: 8080
             initialDelaySeconds: 10
             periodSeconds: 5
           resources:
