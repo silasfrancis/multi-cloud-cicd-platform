@@ -74,6 +74,8 @@ jobs:
             JSON_DIR="${{ steps.helm_dir.outputs.JSON_DIR }}"
             VALUES_FILE="$JSON_DIR/values.yaml"
 
+            echo $VALUES_FILE
+
             for file in $JSON_DIR/*.json; do
               [ -e "$file" ] || continue  # skip if no JSON files
 

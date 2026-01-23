@@ -14,7 +14,7 @@ apps:
         memory: 256Mi
   reactRecoil:
     replicas: 1
-    image: silasfrancis/devops-client-dev:ff03e3e-0000-gff03e3e
+    image: silasfrancis/devops-client-dev:e4f58c9-0000-ge4f58c9
     resources:
       limits:
         cpu: 1
