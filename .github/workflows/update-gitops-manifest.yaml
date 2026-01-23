@@ -69,12 +69,14 @@ jobs:
               fi
 
         - name: Update helm values for all services
+          id: update_helm_values
           run: | 
             ENV_DIR="${{ github.ref_name }}"
             JSON_DIR="${{ steps.helm_dir.outputs.JSON_DIR }}"
             VALUES_FILE="$JSON_DIR/values.yaml"
-
+            
             echo $VALUES_FILE
+            echo "VALUES_FILE=$VALUES_FILE" >> $GITHUB_OUTPUT
 
             for file in $JSON_DIR/*.json; do
               [ -e "$file" ] || continue  # skip if no JSON files
@@ -117,10 +119,12 @@ jobs:
             GIT_USER: ${{ github.actor }}
             GIT_USER_EMAIL: ${{ vars.GIT_USER_EMAIL }}
           run: |
+                VALUES_FILE="${{ steps.update_helm_values.outputs.VALUES_FILE }}"
                 git config user.name "$GIT_USER"
                 git config user.email "$GIT_USER_EMAIL"
 
-                git add helm/**/values.yaml
+                echo "Staging changes..."
+                git add "$VALUES_FILE"
 
                 if git diff --cached --quiet; then
                   echo "No changes to commit"
