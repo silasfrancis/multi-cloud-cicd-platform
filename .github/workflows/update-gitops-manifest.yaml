@@ -123,6 +123,8 @@ jobs:
                 git config user.name "$GIT_USER"
                 git config user.email "$GIT_USER_EMAIL"
 
+                git pull origin ${{ github.ref_name }} --rebase
+
                 echo "Staging changes..."
                 git add "$VALUES_FILE"
 
