@@ -82,19 +82,35 @@ jobs:
               SERVICE=$(jq -r '.service' "$file")
               IMAGE_TAG=$(jq -r '.image_tag' "$file")
 
+              echo "Processing: $file"
+              echo "Service: $SERVICE"
+              echo "Image Tag: $IMAGE_TAG"
+
               echo "Updating $SERVICE -> $IMAGE_TAG"
 
               # Update Helm values using yq
               if [[ "$SERVICE" == *"fastapi"* ]]; then
-              yq -i '.apps.fastapi.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
+                CURRENT=$(yq '.apps.fastapi.image' "$VALUES_FILE")
+                echo "Current fastapi image: $CURRENT"
+                yq -i '.apps.fastapi.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               elif [[ "$SERVICE" == *"react-recoil"* ]]; then
-              yq -i '.apps.reactRecoil.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
+                CURRENT=$(yq '.apps.reactRecoil.image' "$VALUES_FILE")
+                echo "Current reactRecoil image: $CURRENT"
+                yq -i '.apps.reactRecoil.image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               elif [[ "$SERVICE" == *"postgres_db"* ]]; then
-              yq -i '.postgres.migration_image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
+                CURRENT=$(yq '.postgres.migration_image' "$VALUES_FILE")
+                echo "Current postgres migration image: $CURRENT"
+                yq -i '.postgres.migration_image = "'"$IMAGE_TAG"'"' "$VALUES_FILE"
               else
-              echo "Unknown service: $SERVICE, skipping"
+                echo "Unknown service: $SERVICE, skipping"
               fi
             done
+
+            echo "Contents after update:"
+            cat "$VALUES_FILE"
+
+            echo "Git diff:"
+            git diff "$VALUES_FILE"
           
         - name: Commit and push Helm updates
           env: 
