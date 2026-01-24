@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev_ops_app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/silasfrancis/my-devops-application.git
+    path: helm/platform
+    targetRevision: dev
+    helm:
+      valueFiles:
+        - ./values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

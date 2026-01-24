@@ -209,26 +209,35 @@ tasks:
           -f db/env/dev/values.yaml \
           -n postgres-namespace \
           --create-namespace
+
+  4:apply_platform_configs_for_app:
+    cmd:
+        |
+          helm install platform platform \
+          -f platform/values.yaml
+          -n apps-namespace \
+          --create-namespace
   
-  4:apply_upgrade_to_db:
+  5:apply_upgrade_to_db:
     cmd: 
       |
        helm upgrade --install db db \
         -f db/env/dev/values.yaml \
         -n postgres-namespace
 
-  5:apply_upgrade_to_app:
+  6:apply_upgrade_to_app:
     cmd: 
       |
        helm upgrade --install app app \
         -f app/env/dev/values.yaml \
         -n apps-namespace
 
-  6:apply_gateway_rules:
-    cmds: 
-      - kubectl apply -f app/templates/001_gatewayclass.yaml
-      - kubectl apply -f app/templates/002_gatewayapi.yaml 
-      - kubectl apply -f app/templates/003_httproute_api.yaml 
-      - kubectl apply -f app/templates/003_httproute_app.yaml 
+  7:apply_upgrade_to_platform_configs:
+    cmd: 
+      |
+        helm upgrade --install platform platform \
+        -f platform/values.yaml
+        -n apps-namespace \
+        --create-namespace
 
 # psql -h localhost -p 5432 -U francis_user -d francis_db -f Backend/postgres_db/001_database_dump.sql

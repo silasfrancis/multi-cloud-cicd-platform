@@ -20,9 +20,11 @@ tasks:
     cmds: 
       - kubectl apply -f dev/app_dev.yaml -n argocd
       - kubectl apply -f dev/db_dev.yaml -n argocd
+      - kubectl apply -f dev/platform_dev.yaml -n argocd
   
   4:apply-main-application:
     desc: Apply main application to main cluster
     cmds: 
       - kubectl apply -f main/app_main.yaml -n argocd
       - kubectl apply -f main/db_main.yaml -n argocd
+      - kubectl apply -f main/platform_main.yaml -n argocd

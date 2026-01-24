@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: demo-app
+  name: dev_ops_app
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/silasfrancis/my-devops-application.git
     path: helm/app
-    targetRevision: dev
+    targetRevision: main
     helm:
       valueFiles:
         - ./env/main/values.yaml
