@@ -112,15 +112,15 @@ tasks:
     cmds:
       - |
         NODEIAMROLE_ARN=$(aws iam get-role --role-name AmazonEKSAutoNodeRole --query "Role.Arn" --output text)
-        SUBMITIDs=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=${CLUSTER_NAME}-subnet-* --region ${AWS_REGION} --query 'Subnets[].SubnetId' --output text)
-        echo $SUBMITIDs
+        SUBNETIDs=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=${CLUSTER_NAME}-subnet-* --region ${AWS_REGION} --query 'Subnets[].SubnetId' --output text)
+        echo $SUBNETIDs
         aws eks create-nodegroup \
           --cluster-name ${CLUSTER_NAME} \
           --nodegroup-name ${CLUSTER_NAME}-nodegroup \
           --region ${AWS_REGION} \
           --scaling-config minSize=1,maxSize=2,desiredSize=2 \
           --disk-size 20 \
-          --subnets $SUBMITIDs \
+          --subnets $SUBNETIDs \
           --ami-type AL2_x86_64 \
           --instance-types 't3.large' \
           --node-role ${NODEIAMROLE_ARN}
