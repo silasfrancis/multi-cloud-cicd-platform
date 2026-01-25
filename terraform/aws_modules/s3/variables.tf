@@ -3,11 +3,11 @@ variable "bucket_name" {
   type = string
 }
 
-variable "bucket_prefix" {
-    description = "Bucket prefix"
-    type = string
+# variable "bucket_prefix" {
+#     description = "Bucket prefix"
+#     type = string
   
-}
+# }
 
 variable "bucket_key" {
     description = "Name/path of object"
