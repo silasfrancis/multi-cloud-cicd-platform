@@ -1,0 +1,167 @@
+name: Build and Push Dev Images to Docker Hub
+
+on:
+    workflow_run:
+      workflows:
+        - Provison AWS or Linode resources
+      types:
+        - completed
+    push:
+        branches:
+          - dev
+        paths:
+          - 'Frontend/react-recoil/**'
+          - 'Backend/fastapi/**'
+          - 'Backend/postgres_db/**'
+    workflow_dispatch:
+      inputs:
+        service:
+          description: 'Service path that triggered the workflow'
+          required: true
+          type: choice
+          options:
+            - 'Backend/fastapi'
+            - 'Frontend/react-recoil'
+            - 'Backend/postgres_db'
+
+jobs:
+  filter-updated-directories:
+    runs-on: ubuntu-24.04
+    if: |
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+    outputs:
+        dir_changed: ${{ steps.filter_files.outputs.changes}}
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
+
+        - name: Filter changed files
+          id: filter_files
+          uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+          with:
+                token: ${{ github.token || secrets.GITHUB_TOKEN }}
+                filters: .github/workflows/utils/filefilter.yaml
+  
+  build-and-push:
+    runs-on: ubuntu-24.04
+    if: ${{ needs.filter-updated-directories.outputs.dir_changed != '[]' && needs.filter-updated-directories.outputs.dir_changed != ''}}
+    needs: filter-updated-directories
+    permissions:
+        contents: write
+        id-token: write
+    strategy:
+        fail-fast: false
+        matrix:
+            dir_changed: ${{ fromJson(needs.filter-updated-directories.outputs.dir_changed) }}
+    concurrency:
+      group: git-write-${{ github.ref_name }}-${{ matrix.dir_changed }}
+      cancel-in-progress: false
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
+
+        - name: Install task
+          uses:  supplypike/setup-bin@1fafb085795af4a3f183502f3a9dffa8f7b83217
+          with:
+            uri: "https://github.com/go-task/task/releases/download/v3.46.4/task_linux_amd64.tar.gz"
+            name: "task"
+            version: v3.46.4
+
+        - name: Auth to Docker Hub
+          if: ${{ !env.ACT }}
+          uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
+          with:
+              username: ${{ vars.DOCKERHUB_USERNAME }}
+              password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+        
+        - name: Get image repo
+          id: get_image_repo
+          run: |
+            IMAGE_REPO=$(task -t .github/workflows/utils/Taskfile.yaml generate-image-repo-dev -- "${{ matrix.dir_changed }}" | tail -n 1)
+            echo "IMAGE_REPO=$IMAGE_REPO" >> $GITHUB_OUTPUT
+
+        - name: Compute image tags
+          id: image_tags
+          env: 
+            ENVIRONMENT: ${{ github.ref_name }}
+            SERVICE: ${{ matrix.dir_changed }}
+            IMAGE_REPOS: ${{ steps.get_image_repo.outputs.IMAGE_REPO }}
+          run: |
+            if [ "$ENVIRONMENT" = "main" ]; then
+              IMAGE_VERSION=$(task -t utils/Taskfile.yaml generate-version -- "${SERVICE}")
+              IMAGE_TAG=$(task -t utils/Taskfile.yaml generate-version-tag -- "${SERVICE}" "${IMAGE_REPOS}""${ENVIRONMENT}" | tail -n 1)
+            else
+              IMAGE_VERSION=$(task -t utils/Taskfile.yaml generate-extended-version -- "${SERVICE}")
+              IMAGE_TAG=$(task -t utils/Taskfile.yaml generate-extended-version-tag -- "${SERVICE}" "${IMAGE_REPOS}""${ENVIRONMENT}" | tail -n 1)
+            fi
+            echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_OUTPUT
+            echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
+        
+        - name: Set docker image target
+          id: docker_target
+          env:
+            ENVIRONMENT: ${{ github.ref_name }}
+          run: |
+            if [ ${ENVIRONMENT} = "main" ]; then
+              echo "TARGET=production" >> $GITHUB_OUTPUT
+            elif [ ${ENVIRONMENT} = "dev" ]; then
+              echo "TARGET=dev" >> $GITHUB_OUTPUT
+            else
+              echo "TARGET=staging" >> $GITHUB_OUTPUT
+            fi
+
+        - name: Build and push image
+          uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
+          with:
+            context: ${{matrix.dir_changed}}
+            push: ${{ !env.ACT }}
+            tags: ${{ steps.image_tags.outputs.IMAGE_TAG }}
+            target: ${{ steps.docker_target.outputs.TARGET }}
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
+            
+        - name: Export service build info
+          id: export
+          run: |
+            echo "{\"service\":\"${{ matrix.dir_changed }}\",\"image_tag\":\"${{ steps.image_tags.outputs.IMAGE_TAG }}\"}" > output.json
+        
+        - name: cleanup service name
+          id: svc
+          run: echo "SERVICE_NAME=$(echo '${{ matrix.dir_changed }}' | sed 's|.*/||')" >> $GITHUB_OUTPUT
+
+        - name: Persist build info to repo
+          env:
+            SERVICE_NAME: ${{ steps.svc.outputs.SERVICE_NAME }}
+            ENVIRONMENT: ${{ github.ref_name }}
+            GIT_USER: ${{ github.actor }}
+            GIT_USER_EMAIL: ${{ vars.GIT_USER_EMAIL }}
+          run: |
+            set -e
+
+            if [ "$SERVICE_NAME" != "postgres_db" ]; then
+                TARGET_DIR="helm/app/env/$ENVIRONMENT"
+            else
+              TARGET_DIR="helm/db/env/$ENVIRONMENT"
+            fi
+
+            TARGET_FILE="$TARGET_DIR/$SERVICE_NAME.json"
+
+            mkdir -p "$TARGET_DIR"
+            mv output.json "$TARGET_FILE"
+
+            git config user.name "$GIT_USER"
+            git config user.email "$GIT_USER_EMAIL"
+
+            git add "$TARGET_FILE"
+            git commit -m "ci: update build info for $SERVICE_NAME ($ENVIRONMENT)" || echo "No changes to commit"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push origin ${{ github.ref_name }}
+
+

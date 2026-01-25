@@ -1,0 +1,16 @@
+# name: Provison AWS or Linode resources
+
+on: 
+    workflow_run:
+      workflows:
+        - Run unit tests
+      types:
+        - completed
+    push:
+        branches:
+            - main
+            - dev
+
+jobs:
+  filter-updated-directories:
+    runs-on: ubuntu-24.04

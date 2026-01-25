@@ -3,7 +3,8 @@ name: Update helm values
 on:
     workflow_run:
         workflows:
-            - Build and Push Docker Images
+            - Build and Push Dev Images to Docker Hub
+            - Build and Push main Images to AWS ECR
         types:
             - completed
 
@@ -63,9 +64,9 @@ jobs:
           run: |
               SERVICE_NAME=$(echo "${{ matrix.dir_changed }}" | sed 's|.*/||')
               if [[ "$SERVICE_NAME" == "postgres_db" ]]; then
-                echo "JSON_DIR=helm/db/env/${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+                echo "JSON_DIR=helm/db/env/${{ github.ref_name }}" >> $GITHUB_OUTPUT
               else
-                echo "JSON_DIR=helm/app/env/${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+                echo "JSON_DIR=helm/app/env/${{ github.ref_name }}" >> $GITHUB_OUTPUT
               fi
 
         - name: Update helm values for all services
