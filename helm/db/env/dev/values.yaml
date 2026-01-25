@@ -3,7 +3,7 @@ postgres:
   replicas: 1
   database: francis_db
   image: postgres:16
-  migration_image: silasfrancis/db-migration-dev:8dd59df-0000-g8dd59df
+  migration_image: silasfrancis/db-migration-dev:5e0404c-0000-g5e0404c
   password: francisdb
   port: 5432
   user: francis_user
