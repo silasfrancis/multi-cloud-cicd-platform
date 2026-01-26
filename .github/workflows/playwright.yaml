@@ -18,30 +18,14 @@ jobs:
       github.event_name != 'workflow_run' ||
       github.event.workflow_run.conclusion == 'success'
 
-    env:
-      DBNAME: postgres
-      DBUSER: postgres
-      PASSWORD: ${{ secrets.DB_PASSWORD }}
-      POSTGRES_PORT: 5432
-      CLIENT_HOST: 0.0.0.0
-      CLIENT_PORT: 3000
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      CHOKIDAR_USEPOLLING: "true"
-
     steps:
       - name: Checkout code
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
 
-      - name: Start stack with Docker Compose
-        uses: hoverkraft-tech/compose-action@248470ecc5ed40d8ed3d4480d8260d77179ef579
-        with:
-          compose-file: utils/docker-compose.ci.yaml
-
       - name: Wait for API to be ready
         run: |
           for i in {1..30}; do
-            curl -f http://localhost:8000/health && exit 0
+            curl -f https://api.lefrancis.org && exit 0
             sleep 5
           done
           echo "API did not become ready" && exit 1

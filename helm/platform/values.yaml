@@ -13,5 +13,5 @@ gateway:
 
 http_route:
   hostnames:
-    api: "api.lefrancis.com"
-    app: "app.lefrancis.com"
+    api: "api.lefrancis.org"
+    app: "app.lefrancis.org"

@@ -1,3 +1,4 @@
+#For local test
 version: "3"
 
 env:
@@ -240,4 +241,14 @@ tasks:
         -n apps-namespace \
         --create-namespace
 
-# psql -h localhost -p 5432 -U francis_user -d francis_db -f Backend/postgres_db/001_database_dump.sql
+#Install External Secrets into cluster
+  1:install_external_secrets_for_vault:
+    cmd:
+      |
+      helm repo add external-secrets https://charts.external-secrets.io
+
+      helm install external-secrets \
+        external-secrets/external-secrets \
+          -n external-secrets \
+          --create-namespace 
+          #--set installCRDs=false

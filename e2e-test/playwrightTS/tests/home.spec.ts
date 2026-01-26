@@ -1,15 +1,10 @@
 import {test, expect} from '@playwright/test';  
 import { Home } from '../Pages/Home';
-import dotenv from 'dotenv';
-import path from 'path';
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
 
 test("Navigate to Home Page and verify title", async ({page}) => {
     const homePage = new Home(page);
     await homePage.navigateToHomePage();
-    await homePage.verifyHomePageTitle(process.env.HomepageTitle as string);
+    await homePage.verifyHomePageTitle("Conduit");
 });
 
 test("Verify Global feed has articles", async ({page}) => {

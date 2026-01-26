@@ -1,4 +1,4 @@
-# name: Provison AWS or Linode resources
+name: Provison AWS or Linode resources
 
 on: 
   workflow_run:

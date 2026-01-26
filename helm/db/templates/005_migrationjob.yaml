@@ -1,6 +1,6 @@
 apiVersion: batch/v1
 kind: Job
-metadata: 
+metadata:
   name: db-migration
   namespace: {{ .Values.postgres.namespace }}
 spec:
@@ -13,6 +13,32 @@ spec:
           image: {{ .Values.postgres.migration_image }}
           command: ["/bin/sh", "-c"]
           args:
-            - migrate -path=/app/migrations \
-              -database=postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@postgres-service.{{ .Values.postgres.namespace }}.svc.cluster.local:5432/{{ .Values.postgres.database }}?sslmode=disable \
-              up
+            - |
+              export FLYWAY_URL="jdbc:postgresql://postgres-service.{{ .Values.postgres.namespace }}.svc.cluster.local:5432/${POSTGRES_DB}?sslmode=disable"
+              exec flyway migrate
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: POSTGRES_DB
+            - name: FLYWAY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: POSTGRES_USER
+            - name: FLYWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: POSTGRES_PASSWORD

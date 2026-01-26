@@ -1,3 +1,5 @@
+env: main
+
 apps:
   namespace: apps-namespace
   fastapi:
@@ -19,11 +21,11 @@ apps:
     tag: e61dec3-0000-ge61dec3
     resources:
       limits:
-        cpu: 200m
-        memory: 256Mi
+        cpu: 1
+        memory: 2Gi
       requests:
-        cpu: 50m
-        memory: 64Mi
+        cpu: 200m
+        memory: 1Gi
 
 postgres:
   namespace: postgres-namespace

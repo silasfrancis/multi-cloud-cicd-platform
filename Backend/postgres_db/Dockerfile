@@ -1,7 +1,9 @@
-FROM migrate/migrate:v4.19.1 as base
+FROM flyway/flyway:10 as base
 
 FROM base as dev
-COPY 001_database_dump.sql  /app/migrations/
+COPY sql  /flyway/sql
 
 FROM base as production
-COPY *.sql  /app/migrations/
+COPY sql  /flyway/sql
+
+RUN flyway -v
