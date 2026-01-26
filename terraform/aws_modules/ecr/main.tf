@@ -28,37 +28,12 @@ resource "aws_ecr_lifecycle_policy" "devops_api_policy" {
   "rules": [
     {
       "rulePriority": 1,
-      "description": "Keep only last 10 images",
+      "description": "Keep last 30 images",
       "selection": {
-        "tagStatus": "any",
+        "tagStatus": "tagged",
+        "tagPrefixList": ["v"],
         "countType": "imageCountMoreThan",
-        "countNumber": 10
-      },
-      "action": {
-        "type": "expire"
-      }
-    },
-    {
-      "rulePriority": 2,
-      "description": "Archive images not pulled in 30 days",
-      "selection": {
-        "tagStatus": "any",
-        "countType": "sinceImagePushed",
-        "countUnit": "days",
         "countNumber": 30
-      },
-      "action": {
-        "type": "expire"   # AWS ECR doesn't directly "archive", only expire
-      }
-    },
-    {
-      "rulePriority": 3,
-      "description": "Delete images expired for more than 60 days",
-      "selection": {
-        "tagStatus": "any",
-        "countType": "sinceImagePushed",
-        "countUnit": "days",
-        "countNumber": 60
       },
       "action": {
         "type": "expire"
@@ -69,45 +44,20 @@ resource "aws_ecr_lifecycle_policy" "devops_api_policy" {
 EOF
 }
 
-resource "aws_ecr_lifecycle_policy" "devops_api_policy" {
+resource "aws_ecr_lifecycle_policy" "db_policy" {
   repository = aws_ecr_repository.db_migration.name
 
-  policy = <<EOF
+   policy = <<EOF
 {
   "rules": [
     {
       "rulePriority": 1,
-      "description": "Keep only last 10 images",
+      "description": "Keep last 30 images",
       "selection": {
-        "tagStatus": "any",
+        "tagStatus": "tagged",
+        "tagPrefixList": ["v"],
         "countType": "imageCountMoreThan",
-        "countNumber": 10
-      },
-      "action": {
-        "type": "expire"
-      }
-    },
-    {
-      "rulePriority": 2,
-      "description": "Archive images not pulled in 30 days",
-      "selection": {
-        "tagStatus": "any",
-        "countType": "sinceImagePushed",
-        "countUnit": "days",
         "countNumber": 30
-      },
-      "action": {
-        "type": "expire"   # AWS ECR doesn't directly "archive", only expire
-      }
-    },
-    {
-      "rulePriority": 3,
-      "description": "Delete images expired for more than 60 days",
-      "selection": {
-        "tagStatus": "any",
-        "countType": "sinceImagePushed",
-        "countUnit": "days",
-        "countNumber": 60
       },
       "action": {
         "type": "expire"
@@ -118,45 +68,20 @@ resource "aws_ecr_lifecycle_policy" "devops_api_policy" {
 EOF
 }
 
-resource "aws_ecr_lifecycle_policy" "devops_api_policy" {
+resource "aws_ecr_lifecycle_policy" "react_recoil_policy" {
   repository = aws_ecr_repository.devops_client.name
 
-  policy = <<EOF
+   policy = <<EOF
 {
   "rules": [
     {
       "rulePriority": 1,
-      "description": "Keep only last 10 images",
+      "description": "Keep last 30 images",
       "selection": {
-        "tagStatus": "any",
+        "tagStatus": "tagged",
+        "tagPrefixList": ["v"],
         "countType": "imageCountMoreThan",
-        "countNumber": 10
-      },
-      "action": {
-        "type": "expire"
-      }
-    },
-    {
-      "rulePriority": 2,
-      "description": "Archive images not pulled in 30 days",
-      "selection": {
-        "tagStatus": "any",
-        "countType": "sinceImagePushed",
-        "countUnit": "days",
         "countNumber": 30
-      },
-      "action": {
-        "type": "expire"   # AWS ECR doesn't directly "archive", only expire
-      }
-    },
-    {
-      "rulePriority": 3,
-      "description": "Delete images expired for more than 60 days",
-      "selection": {
-        "tagStatus": "any",
-        "countType": "sinceImagePushed",
-        "countUnit": "days",
-        "countNumber": 60
       },
       "action": {
         "type": "expire"

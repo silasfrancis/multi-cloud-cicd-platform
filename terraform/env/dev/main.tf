@@ -20,8 +20,8 @@ provider "linode" {
 }
 
 locals {
-  environment = dev
-  cluster_name = k8-main-cluster
+  environment = "dev"
+  cluster_name = "k8-main-cluster"
   region = "us-lax"
 }
 

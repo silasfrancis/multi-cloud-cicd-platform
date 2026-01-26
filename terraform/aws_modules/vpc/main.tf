@@ -15,6 +15,10 @@ resource "aws_vpc" "vpc_main" {
   }
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 resource "aws_subnet" "primary_subnet" {
   vpc_id = aws_vpc.vpc_main.id
   cidr_block = "10.0.1.0/24"
@@ -27,7 +31,7 @@ resource "aws_subnet" "primary_subnet" {
 
 resource "aws_subnet" "secondary_subnet" {
   vpc_id = aws_vpc.vpc_main.id
-  cidr_block = "10.0.1.0/24"
+  cidr_block = "10.0.2.0/24"
   region = var.region
   availability_zone = data.aws_availability_zones.available.names[1]
   tags = {
@@ -74,7 +78,7 @@ resource "aws_security_group_rule" "ingress_rule_https" {
     security_group_id = aws_security_group.security_group.id
 
 }
-resource "aws_security_group_rule" "ingress_rule_https" {
+resource "aws_security_group_rule" "egress_rule" {
     type = "egress"
     description = "Allow all outbound traffic"
     from_port = 0

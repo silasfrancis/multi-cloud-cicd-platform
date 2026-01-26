@@ -33,6 +33,8 @@ resource "aws_s3_object" "s3_object" {
   bucket = var.bucket_name
   key = var.bucket_key
   region = var.region
+
+  depends_on = [ aws_s3_bucket.s3_bucket ]
 }
 
 resource "aws_s3_bucket_versioning" "bucket_versioning_config" {

@@ -67,6 +67,6 @@ variable "disk_size" {
 
 variable "instance_types" {
     description = "Instance type of node"
-    type = (liststring)
+    type = list(string)
   
 }

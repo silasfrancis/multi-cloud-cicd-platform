@@ -1,12 +1,12 @@
 terraform {
-  backend "s3" {
-    bucket = ""
-    key = ""
-    region = "us-east-2"
-    dynamodb_table = ""
-    encrypt = true
+  # backend "s3" {
+  #   bucket = "k8-main-cluster-silas-main"
+  #   key = "main/terraform.tfstate"
+  #   region = "us-east-2"
+  #   dynamodb_table = ""
+  #   encrypt = true
     
-  }
+  # }
 
   required_providers {
     aws = {
@@ -21,8 +21,8 @@ provider "aws" {
 }
 
 locals {
-  environment = main
-  cluster_name = k8-main-cluster
+  environment = "main"
+  cluster_name = "k8-main-cluster"
 }
 
 module "vpc" {
@@ -53,10 +53,15 @@ module "eks" {
                             max_size = 2
                             min_size = 1
                         }
-  security_group_id = module.vpc.security_group_id
-  ami_type = ""
-  disk_size = ""
-  instance_types = [""]
+  security_group_id = ["module.vpc.security_group_id"]
+  ami_type = "AL2_x86_64"
+  disk_size = "20"
+  instance_types = ["m7i-flex.large"]
+
+    depends_on = [
+    module.vpc,
+    module.iam
+  ]
 
 }
 
