@@ -1,6 +1,6 @@
 {
       "inputs": {
-    "service": "Backend/fastapi"
+    "service": "backend/fastapi"
   },
     "repository": {
         "default_branch": "main"

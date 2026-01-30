@@ -10,9 +10,9 @@ on:
         branches:
             - main
         paths:
-          - 'Frontend/react-recoil/**'
-          - 'Backend/fastapi/**'
-          - 'Backend/postgres_db/**'
+          - 'frontend/react-recoil/**'
+          - 'backend/fastapi/**'
+          - 'backend/postgres_db/**'
 
 jobs:
   filter-updated-directories:

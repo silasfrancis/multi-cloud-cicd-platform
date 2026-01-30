@@ -9,13 +9,13 @@ tasks:
         echo "Service argument passed: {{.SERVICE}}"  # For debugging
 
         case "{{.SERVICE}}" in
-          "Backend/fastapi")
+          "backend/fastapi")
             echo "silasfrancis/devops-api"
             ;;
-          "Backend/postgres_db")
+          "backend/postgres_db")
             echo "silasfrancis/db-migration"
             ;;
-          "Frontend/react-recoil")
+          "frontend/react-recoil")
             echo "silasfrancis/devops-client"
             ;;
           *)
@@ -32,13 +32,13 @@ tasks:
         echo "Service argument passed: {{.SERVICE}}"  # For debugging
 
         case "{{.SERVICE}}" in
-          "Backend/fastapi")
+          "backend/fastapi")
             echo "silasfrancis/devops-api"
             ;;
-          "Backend/postgres_db")
+          "backend/postgres_db")
             echo "silasfrancis/db-migration"
             ;;
-          "Frontend/react-recoil")
+          "frontend/react-recoil")
             echo "silasfrancis/devops-client"
             ;;
           *)

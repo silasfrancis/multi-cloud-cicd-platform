@@ -10,9 +10,9 @@ on:
         branches:
           - dev
         paths:
-          - 'Frontend/react-recoil/**'
-          - 'Backend/fastapi/**'
-          - 'Backend/postgres_db/**'
+          - 'frontend/react-recoil/**'
+          - 'backend/fastapi/**'
+          - 'backend/postgres_db/**'
     workflow_dispatch:
       inputs:
         service:
@@ -20,9 +20,9 @@ on:
           required: true
           type: choice
           options:
-            - 'Backend/fastapi'
-            - 'Frontend/react-recoil'
-            - 'Backend/postgres_db'
+            - 'backend/fastapi'
+            - 'frontend/react-recoil'
+            - 'backend/postgres_db'
 
 jobs:
   filter-updated-directories:

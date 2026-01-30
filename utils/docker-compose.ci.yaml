@@ -19,7 +19,7 @@ services:
   api:
     build:
       target: production
-      context: ./Backend/fastapi
+      context: ./backend/fastapi
       dockerfile: Dockerfile.api
     container_name: fastapi_real_world_cont
     environment:
@@ -45,7 +45,7 @@ services:
   client:
     build:
       target: production
-      context: ./Frontend/react-recoil
+      context: ./frontend/react-recoil
       dockerfile: Dockerfile.fe
     container_name: client_real_world_cont
     environment:

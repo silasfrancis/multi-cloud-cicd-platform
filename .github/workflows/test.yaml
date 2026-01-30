@@ -10,8 +10,8 @@ on:
           - main
           - dev
         paths:
-          - 'Frontend/react-recoil/**'
-          - 'Backend/fastapi/**'
+          - 'frontend/react-recoil/**'
+          - 'backend/fastapi/**'
     workflow_dispatch:
 
 jobs:
@@ -43,13 +43,13 @@ jobs:
           uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
         
         - name: Skip db test
-          if: ${{ startsWith(matrix.dir_changed, 'Backend/postgres_db') }}
+          if: ${{ startsWith(matrix.dir_changed, 'backend/postgres_db') }}
           run: |
             echo "Skipping tests for database migrations."
             exit 0
 
         - name: Setup node environment
-          if: ${{ startsWith(matrix.dir_changed, 'Frontend/react-recoil') }}
+          if: ${{ startsWith(matrix.dir_changed, 'frontend/react-recoil') }}
           uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
           with:
               node-version-file: ${{matrix.dir_changed}}/package.json
@@ -57,7 +57,7 @@ jobs:
               cache-dependency-path: ${{matrix.dir_changed}}/package-lock.json
 
         - name: Setup python environment
-          if: ${{ startsWith(matrix.dir_changed, 'Backend/fastapi') }}
+          if: ${{ startsWith(matrix.dir_changed, 'backend/fastapi') }}
           uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
           with:
               python-version-file: ${{matrix.dir_changed}}/.python-version
@@ -79,7 +79,7 @@ jobs:
             task install_dependencies_ci
 
         - name: Run tests
-          if: ${{ !startsWith(matrix.dir_changed, 'Backend/postgres_db') }}
+          if: ${{ !startsWith(matrix.dir_changed, 'backend/postgres_db') }}
           working-directory: ${{ matrix.dir_changed }}
           run: |
             task test
