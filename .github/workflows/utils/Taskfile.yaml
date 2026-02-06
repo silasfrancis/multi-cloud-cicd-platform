@@ -10,13 +10,13 @@ tasks:
 
         case "{{.SERVICE}}" in
           "backend/fastapi")
-            echo "silasfrancis/devops-api"
+            echo "silasfrancis/devops-api-"
             ;;
           "backend/postgres_db")
-            echo "silasfrancis/db-migration"
+            echo "silasfrancis/db-migration-"
             ;;
           "frontend/react-recoil")
-            echo "silasfrancis/devops-client"
+            echo "silasfrancis/devops-client-"
             ;;
           *)
             echo "Unknown service: {{.SERVICE}}"
@@ -33,13 +33,13 @@ tasks:
 
         case "{{.SERVICE}}" in
           "backend/fastapi")
-            echo "silasfrancis/devops-api"
+            echo "silasfrancis/devops-api-"
             ;;
           "backend/postgres_db")
-            echo "silasfrancis/db-migration"
+            echo "silasfrancis/db-migration-"
             ;;
           "frontend/react-recoil")
-            echo "silasfrancis/devops-client"
+            echo "silasfrancis/devops-client-"
             ;;
           *)
             echo "Unknown service: {{.SERVICE}}"
