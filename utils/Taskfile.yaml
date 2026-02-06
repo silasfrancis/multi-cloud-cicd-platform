@@ -25,11 +25,9 @@ tasks:
         sh: echo "{{.ARGS}}" | awk '{print $3}'
       VERSION:
         sh: task -s generate-version -- {{.SERVICE_RELEASE_TAG}}
-      IMAGE_WITH_ENV:
-      sh: echo "{{.IMAGE_REPO}}-{{.ENVIRONMENT}}"
     cmds:
       - |
-       echo "{{.IMAGE_WITH_ENV}}:{{.VERSION}}"
+       echo "{{.IMAGE_REPO}}{{.ENVIRONMENT}}:{{.VERSION}}"
 
   generate-extended-version:
     desc: "Emit X.Y.Z-000N-g<SHA> using generate-version as the base"
@@ -66,8 +64,6 @@ tasks:
         sh: echo "{{.ARGS}}" | awk '{print $3}'
       VERSION:
         sh: task -s generate-version -- {{.SERVICE_RELEASE_TAG}}
-      IMAGE_WITH_ENV:
-      sh: echo "{{.IMAGE_REPO}}-{{.ENVIRONMENT}}"
     cmds:
       - |
-       echo "{{.IMAGE_WITH_ENV}}:{{.VERSION}}"
+       echo "{{.IMAGE_REPO}}{{.ENVIRONMENT}}:{{.VERSION}}"
