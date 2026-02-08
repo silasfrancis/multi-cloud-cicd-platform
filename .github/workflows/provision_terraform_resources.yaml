@@ -1,4 +1,4 @@
-name: Provison AWS or Linode resources
+# name: Provison AWS or Linode resources
 
 on: 
   workflow_run:
@@ -17,11 +17,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      LINODE_TOKEN: ${{ secrets.LINODE_TOKEN }}
-      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
@@ -34,6 +29,26 @@ jobs:
 
       - name: Terraform Format
         run: terraform fmt -check
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
+          with:
+            role-to-assume: ${{ vars.AWS_SECRETS_ROLE_ARN }}
+            aws-region: us-east-2
+
+      - name: Fetch secrets
+        run: |
+          aws secretsmanager get-secret-value \
+              --secret-id basic_secrets \
+              --query SecretString \
+              --output text
+
+      - name: Load secrets
+        run: |
+              SECRET=$(aws secretsmanager get-secret-value \
+              --secret-id basic_secrets \
+              --query SecretString \
+              --output text)
+              echo "$SECRET" | jq -r 'to_entries|.[]|"echo \(.key)=\(.value) >> $GITHUB_ENV"' | bash
 
       # Dev (Linode)
       - name: Terraform Plan Dev

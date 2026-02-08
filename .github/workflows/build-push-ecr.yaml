@@ -104,7 +104,7 @@ jobs:
         - name: Export service build info
           id: export
           run: |
-            echo "{\"service\":\"${{ matrix.dir_changed }}\",\"image_tag\":\"${{ steps.image_tags.outputs.IMAGE_TAG }}\"}" > output.json
+            echo "{\"service\":\"${{ matrix.dir_changed }}\",\"image_tag\":\"${{ steps.login-ecr.outputs.registry }}/${{ steps.image_tags.outputs.IMAGE_TAG }}\"}" > output.json
         
         - name: cleanup service name
           id: svc
