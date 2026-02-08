@@ -16,22 +16,7 @@ on:
 
 jobs:
   filter-updated-directories:
-    runs-on: ubuntu-24.04
-    if: |
-      github.event_name != 'workflow_run' ||
-      github.event.workflow_run.conclusion == 'success'
-    outputs:
-        dir_changed: ${{ steps.filter_files.outputs.changes}}
-    steps:
-        - name: Checkout code
-          uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
-
-        - name: Filter changed files
-          id: filter_files
-          uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
-          with:
-                token: ${{ github.token || secrets.GITHUB_TOKEN }}
-                filters: .github/workflows/utils/filefilter.yaml
+    uses: ./.github/workflows/filter_updated_dir.yaml
 
   build-and-push:
     runs-on: ubuntu-24.04
@@ -52,11 +37,7 @@ jobs:
           uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
 
         - name: Install task
-          uses:  supplypike/setup-bin@1fafb085795af4a3f183502f3a9dffa8f7b83217
-          with:
-            uri: "https://github.com/go-task/task/releases/download/v3.46.4/task_linux_amd64.tar.gz"
-            name: "task"
-            version: v3.46.4
+          uses:  ./.github/actions/install_task
 
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
@@ -127,7 +108,9 @@ jobs:
         
         - name: cleanup service name
           id: svc
-          run: echo "SERVICE_NAME=$(echo '${{ matrix.dir_changed }}' | sed 's|.*/||')" >> $GITHUB_OUTPUT
+          uses: ./.github/actions/cleanup_service_name
+          with:
+            services: ${{ matrix.dir_changed }}
 
         - name: Persist build info to repo
           env:

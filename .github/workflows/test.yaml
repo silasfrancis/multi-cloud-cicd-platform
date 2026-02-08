@@ -16,19 +16,7 @@ on:
 
 jobs:
   filter-updated-directories:
-    runs-on: ubuntu-24.04
-    outputs:
-        dir_changed: ${{ steps.filter_files.outputs.changes}}
-    steps:
-        - name: Checkout code
-          uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
-
-        - name: Filter changed files
-          id: filter_files
-          uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
-          with:
-                token: ${{ github.token || secrets.GITHUB_TOKEN }}
-                filters: .github/workflows/utils/filefilter.yaml
+    uses: ./.github/workflows/filter_updated_dir.yaml
 
   test:
     runs-on: ubuntu-24.04
@@ -67,11 +55,7 @@ jobs:
                 ${{matrix.dir_changed}}/requirements-ci.txt
 
         - name: Install task
-          uses:  supplypike/setup-bin@1fafb085795af4a3f183502f3a9dffa8f7b83217
-          with:
-            uri: "https://github.com/go-task/task/releases/download/v3.46.4/task_linux_amd64.tar.gz"
-            name: "task"
-            version: v3.46.4
+          uses:  ./.github/actions/install_task
         
         - name: Install app dependencies
           working-directory: ${{ matrix.dir_changed }}

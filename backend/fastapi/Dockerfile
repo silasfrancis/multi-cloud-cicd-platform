@@ -27,3 +27,4 @@ FROM base AS production
 ENV APP_ENV=production
 
 CMD ["uvicorn", "conduit.app:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4"]
+

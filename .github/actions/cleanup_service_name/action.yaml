@@ -1,0 +1,21 @@
+name: "Get Services"
+description: "Extract service name from the changed directory path"
+
+inputs:
+  services:
+    description: Service path to cleanup
+    required: true
+
+outputs:
+  services:
+    description: "List of services"
+    value: ${{ steps.svc.outputs.SERVICE_NAME }}
+
+runs:
+  using: composite
+  steps:
+    - name: Cleanup service name
+      id: svc
+      shell: bash
+      run: |
+        echo "SERVICE_NAME=$(echo '${{ inputs.services }}' | sed 's|.*/||')" >> "$GITHUB_OUTPUT"
