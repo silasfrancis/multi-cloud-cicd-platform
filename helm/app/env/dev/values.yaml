@@ -5,8 +5,6 @@ apps:
   fastapi:
     replicas: 1
     image: silasfrancis/devops-api-dev:ddce371-0000-gddce371
-    jwtSecretKey: c9eedbfdddfe037efd1194d18d614c4ab2467e827ec546e14ae797f463877016
-    secretKey: b1c00c1ce0765d80a9fcda58c5b0b23c5768b1dd983d1aeec15171eac13f7491
     resources:
       limits:
         cpu: 250m

@@ -5,9 +5,6 @@ apps:
   fastapi:
     replicas: 2
     image: silasfrancis/devops-api-main
-    tag: e61dec3-0000-ge61dec3
-    jwtSecretKey: c9eedbfdddfe037efd1194d18d614c4ab2467e827ec546e14ae797f463877016
-    secretKey: b1c00c1ce0765d80a9fcda58c5b0b23c5768b1dd983d1aeec15171eac13f7491
     resources: 
       limits:
         cpu: 500m
@@ -18,7 +15,6 @@ apps:
   reactRecoil:
     replicas: 2
     image: docker.io/silasfrancis/devops-client-main
-    tag: e61dec3-0000-ge61dec3
     resources:
       limits:
         cpu: 1
@@ -29,7 +25,4 @@ apps:
 
 postgres:
   namespace: postgres-namespace
-  database: francis_db
-  password: francisdb
   port: 5432
-  user: francis_user
