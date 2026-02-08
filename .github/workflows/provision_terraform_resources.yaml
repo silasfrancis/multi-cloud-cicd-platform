@@ -29,11 +29,12 @@ jobs:
 
       - name: Terraform Format
         run: terraform fmt -check
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
-          with:
-            role-to-assume: ${{ vars.AWS_SECRETS_ROLE_ARN }}
-            aws-region: us-east-2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
+        with:
+          role-to-assume: ${{ vars.AWS_SECRETS_ROLE_ARN }}
+          aws-region: us-east-2
 
       - name: Fetch secrets
         run: |
@@ -42,13 +43,18 @@ jobs:
               --query SecretString \
               --output text
 
-      - name: Load secrets
+      - name: Load AWS creds from Secrets Manager
         run: |
-              SECRET=$(aws secretsmanager get-secret-value \
-              --secret-id basic_secrets \
-              --query SecretString \
-              --output text)
-              echo "$SECRET" | jq -r 'to_entries|.[]|"echo \(.key)=\(.value) >> $GITHUB_ENV"' | bash
+          SECRET=$(aws secretsmanager get-secret-value \
+            --secret-id terraform-creds \
+            --query SecretString \
+            --output text)
+
+          echo "AWS_ACCESS_KEY_ID=$(echo $SECRET | jq -r .AWS_ACCESS_KEY_ID)" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$(echo $SECRET | jq -r .AWS_SECRET_ACCESS_KEY)" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=$(echo $SECRET | jq -r .AWS_SESSION_TOKEN)" >> $GITHUB_ENV
+          echo "AWS_REGION=us-east-2" >> $GITHUB_ENV
+
 
       # Dev (Linode)
       - name: Terraform Plan Dev
