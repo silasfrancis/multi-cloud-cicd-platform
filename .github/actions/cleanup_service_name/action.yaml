@@ -7,7 +7,7 @@ inputs:
     required: true
 
 outputs:
-  services:
+  SERVICE_NAME:
     description: "List of services"
     value: ${{ steps.svc.outputs.SERVICE_NAME }}
 
