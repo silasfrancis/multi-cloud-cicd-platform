@@ -2,9 +2,9 @@
 
 This directory contains detailed documentation for the Multi-cloud CI/CD Platform.
 
-## Overview
+> For a high-level overview, setup instructions, and repository structure, see the [root README](../README.md).
 
-- [`../README.md`](../README.md) – Project overview, architecture summary, and setup notes
+## Overview of Documentation
 - [`architecture.md`](architecture.md) – System architecture and environment boundaries
 - [`security.md`](security.md) – Identity model, secrets management, and threat analysis
 
