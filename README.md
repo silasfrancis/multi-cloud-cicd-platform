@@ -83,7 +83,6 @@ Runtime workloads consume secrets synced by External Secrets Controller, which a
 .
 ├── .github
 │   ├── actions
-│   ├── appmod
 │   └── workflows
 ├── argocd
 │   ├── dev
