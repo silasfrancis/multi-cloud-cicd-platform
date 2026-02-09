@@ -4,7 +4,7 @@ A production-grade, multi-cloud CI/CD platform built with Kubernetes, Terraform,
 
 The platform runs a FastAPI backend and React frontend, with production on AWS (EKS) and development on Linode (LKE). It demonstrates secure CI/CD practices using GitHub OIDC, GitOps, and Kubernetes-native secrets management.
 
-## About
+## Overview
 Scalable cloud systems must support automated deployment without compromising security.
 
 This project mirrors a real-world, multi-environment setup where development and production run on different cloud providers. It focuses on secure CI/CD pipelines, environment isolation, and repeatable infrastructure patterns suitable for production workloads.
