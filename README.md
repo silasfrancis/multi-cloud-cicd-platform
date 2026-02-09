@@ -17,7 +17,7 @@ This project mirrors a real-world, multi-environment setup where development and
 - Cloud-agnostic infrastructure modules
 - Secrets never stored in Git or container images
 
-## Features:
+## Features
 
 - Multiple cloud platforms for various environments
 - Scalable secrets management for Kubernetes and CI pipelines
@@ -67,19 +67,15 @@ Client → ALB Gateway (Gateway API)
         Application Pods → Kubernetes Secrets ← External Secrets Controller → Vault
 
 ```
-**Execution Model**
-Terraform is executed via GitHub Actions for infrastructure provisioning and updates.
+**Execution Model:** Terraform is executed via GitHub Actions for infrastructure provisioning and updates.
 Application deployments are managed separately using GitOps through ArgoCD.
 
-**GitOps Source of Truth**
-ArgoCD continuously reconciles Kubernetes state from Git, where Helm manifests and image tags are version-controlled.
+**GitOps Source of Truth:** ArgoCD continuously reconciles Kubernetes state from Git, where Helm manifests and image tags are version-controlled.
 
-**Authentication**
-GitHub Actions authenticates to AWS using OIDC, eliminating the need for long-lived credentials in CI.
+**Authentication:** GitHub Actions authenticates to AWS using OIDC, eliminating the need for long-lived credentials in CI.
 Runtime workloads consume secrets synced by External Secrets Controller, which authenticates to HashiCorp Vault using Kubernetes-native authentication.
 
-**Runtime** 
-CI pipelines handle build, test, and infrastructure changes, while runtime application access to secrets is handled exclusively within the cluster.
+**Runtime:** CI pipelines handle build, test, and infrastructure changes, while runtime application access to secrets is handled exclusively within the cluster.
 
 ## Repository Structure
 

@@ -1,6 +1,6 @@
 # Platform Documentation
 
-This directory contains detailed documentation for the Cloud-Native CI/CD Platform.
+This directory contains detailed documentation for the Multi-cloud CI/CD Platform.
 
 ## Overview
 
