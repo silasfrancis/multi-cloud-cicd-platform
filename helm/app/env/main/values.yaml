@@ -4,7 +4,7 @@ apps:
   namespace: apps-namespace
   fastapi:
     replicas: 2
-    image: silasfrancis/devops-api-main
+    image: 811639244661.dkr.ecr.us-east-2.amazonaws.com/silasfrancis/devops-api-main:e46aca1
     resources: 
       limits:
         cpu: 500m
@@ -14,7 +14,7 @@ apps:
         memory: 128Mi
   reactRecoil:
     replicas: 2
-    image: docker.io/silasfrancis/devops-client-main
+    image: 811639244661.dkr.ecr.us-east-2.amazonaws.com/silasfrancis/devops-client-main:e46aca1
     resources:
       limits:
         cpu: 1

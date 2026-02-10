@@ -55,13 +55,6 @@ jobs:
             role-to-assume: ${{ vars.AWS_SECRETS_ROLE_ARN }}
             aws-region: us-east-2
 
-        - name: Fetch secrets
-          run: |
-            aws secretsmanager get-secret-value \
-                --secret-id basic_secrets \
-                --query SecretString \
-                --output text
-
         - name: Load AWS creds from Secrets Manager
           run: |
             SECRET=$(aws secretsmanager get-secret-value \
