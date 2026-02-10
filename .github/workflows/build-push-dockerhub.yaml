@@ -65,7 +65,7 @@ jobs:
         - name: Load AWS creds from Secrets Manager
           run: |
             SECRET=$(aws secretsmanager get-secret-value \
-              --secret-id terraform-creds \
+              --secret-id basic_secrets \
               --query SecretString \
               --output text)
 
