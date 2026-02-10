@@ -3,7 +3,7 @@ name: Build and Push Dev Images to Docker Hub
 on:
     workflow_run:
       workflows:
-        - Provison AWS or Linode resources
+        - Run unit tests
       types:
         - completed
     push:

@@ -3,13 +3,10 @@
 on: 
   workflow_run:
     workflows:
-      - Run unit tests
+      - Build and Push Dev Images to Docker Hub
+      - Build and Push Main Images to AWS ECR
     types:
       - completed
-  push:
-    branches:
-      - main
-      - dev
 
 jobs:
   terraform:

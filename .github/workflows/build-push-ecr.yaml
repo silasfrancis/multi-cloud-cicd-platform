@@ -1,9 +1,9 @@
-name: Build and Push main Images to AWS ECR
+name: Build and Push Main Images to AWS ECR
 
 on: 
     workflow_run:
       workflows:
-        - Provison AWS or Linode resources
+        - Run unit tests
       types:
         - completed
     push:
