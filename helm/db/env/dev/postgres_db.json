@@ -1,1 +1,1 @@
-{"service":"backend/postgres_db","image_tag":"silasfrancis/db-migration-dev:ddce371-0000-gddce371"}
+{"service":"backend/postgres_db","image_tag":"silasfrancis/db-migration-dev:e46aca1"}
