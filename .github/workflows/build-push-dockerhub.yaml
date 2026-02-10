@@ -49,12 +49,35 @@ jobs:
         - name: Install task
           uses:  ./.github/actions/install_task
 
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
+          with:
+            role-to-assume: ${{ vars.AWS_SECRETS_ROLE_ARN }}
+            aws-region: us-east-2
+
+        - name: Fetch secrets
+          run: |
+            aws secretsmanager get-secret-value \
+                --secret-id basic_secrets \
+                --query SecretString \
+                --output text
+
+        - name: Load AWS creds from Secrets Manager
+          run: |
+            SECRET=$(aws secretsmanager get-secret-value \
+              --secret-id terraform-creds \
+              --query SecretString \
+              --output text)
+
+            echo "DOCKERHUB_USERNAME=$(echo $SECRET | jq -r .DOCKERHUB_USERNAME)" >> $GITHUB_ENV
+            echo "DOCKERHUB_TOKEN=$(echo $SECRET | jq -r .DOCKERHUB_TOKEN)" >> $GITHUB_ENV
+
         - name: Auth to Docker Hub
           if: ${{ !env.ACT }}
           uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
           with:
-              username: ${{ vars.DOCKERHUB_USERNAME }}
-              password: ${{ secrets.DOCKERHUB_TOKEN }}
+              username: ${{ env.DOCKERHUB_USERNAME }}
+              password: ${{ env.DOCKERHUB_TOKEN }}
         
         - name: Set up QEMU
           uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130
