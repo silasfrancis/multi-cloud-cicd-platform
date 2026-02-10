@@ -1,76 +1,76 @@
 # name: Provison AWS or Linode resources
 
-on: 
-  workflow_run:
-    workflows:
-      - Build and Push Dev Images to Docker Hub
-      - Build and Push Main Images to AWS ECR
-    types:
-      - completed
+# on: 
+#   workflow_run:
+#     workflows:
+#       - Build and Push Dev Images to Docker Hub
+#       - Build and Push Main Images to AWS ECR
+#     types:
+#       - completed
 
-jobs:
-  terraform:
-    runs-on: ubuntu-24.04
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
+# jobs:
+#   terraform:
+#     runs-on: ubuntu-24.04
+#     permissions:
+#       id-token: write
+#       contents: read
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.1
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
-        with:
-          terraform_version: "1.1.7"
-          terraform_wrapper: false
+#       - name: Setup Terraform
+#         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
+#         with:
+#           terraform_version: "1.1.7"
+#           terraform_wrapper: false
 
-      - name: Terraform Format
-        run: terraform fmt -check
+#       - name: Terraform Format
+#         run: terraform fmt -check
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
-        with:
-          role-to-assume: ${{ vars.AWS_SECRETS_ROLE_ARN }}
-          aws-region: us-east-2
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
+#         with:
+#           role-to-assume: ${{ vars.AWS_SECRETS_ROLE_ARN }}
+#           aws-region: us-east-2
 
-      - name: Fetch secrets
-        run: |
-          aws secretsmanager get-secret-value \
-              --secret-id basic_secrets \
-              --query SecretString \
-              --output text
+#       - name: Fetch secrets
+#         run: |
+#           aws secretsmanager get-secret-value \
+#               --secret-id basic_secrets \
+#               --query SecretString \
+#               --output text
 
-      - name: Load AWS creds from Secrets Manager
-        run: |
-          SECRET=$(aws secretsmanager get-secret-value \
-            --secret-id terraform-creds \
-            --query SecretString \
-            --output text)
+#       - name: Load AWS creds from Secrets Manager
+#         run: |
+#           SECRET=$(aws secretsmanager get-secret-value \
+#             --secret-id terraform-creds \
+#             --query SecretString \
+#             --output text)
 
-          echo "AWS_ACCESS_KEY_ID=$(echo $SECRET | jq -r .AWS_ACCESS_KEY_ID)" >> $GITHUB_ENV
-          echo "AWS_SECRET_ACCESS_KEY=$(echo $SECRET | jq -r .AWS_SECRET_ACCESS_KEY)" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=$(echo $SECRET | jq -r .AWS_SESSION_TOKEN)" >> $GITHUB_ENV
-          echo "AWS_REGION=us-east-2" >> $GITHUB_ENV
+#           echo "AWS_ACCESS_KEY_ID=$(echo $SECRET | jq -r .AWS_ACCESS_KEY_ID)" >> $GITHUB_ENV
+#           echo "AWS_SECRET_ACCESS_KEY=$(echo $SECRET | jq -r .AWS_SECRET_ACCESS_KEY)" >> $GITHUB_ENV
+#           echo "AWS_SESSION_TOKEN=$(echo $SECRET | jq -r .AWS_SESSION_TOKEN)" >> $GITHUB_ENV
+#           echo "AWS_REGION=us-east-2" >> $GITHUB_ENV
 
 
-      # Dev (Linode)
-      - name: Terraform Plan Dev
-        if: github.ref_name == 'dev'
-        working-directory: terraform/env/dev
-        run: terraform init && terraform plan
+#       # Dev (Linode)
+#       - name: Terraform Plan Dev
+#         if: github.ref_name == 'dev'
+#         working-directory: terraform/env/dev
+#         run: terraform init && terraform plan
 
-      - name: Terraform Apply Dev
-        if: github.ref_name == 'dev'
-        working-directory: terraform/env/dev
-        run: terraform apply -auto-approve
+#       - name: Terraform Apply Dev
+#         if: github.ref_name == 'dev'
+#         working-directory: terraform/env/dev
+#         run: terraform apply -auto-approve
 
-      # Main (AWS)
-      - name: Terraform Plan Main
-        if: github.ref_name == 'main'
-        working-directory: terraform/env/main
-        run: terraform init && terraform plan
+#       # Main (AWS)
+#       - name: Terraform Plan Main
+#         if: github.ref_name == 'main'
+#         working-directory: terraform/env/main
+#         run: terraform init && terraform plan
 
-      - name: Terraform Apply Main
-        if: github.ref_name == 'main'
-        working-directory: terraform/env/main
-        run: terraform apply -auto-approve
+#       - name: Terraform Apply Main
+#         if: github.ref_name == 'main'
+#         working-directory: terraform/env/main
+#         run: terraform apply -auto-approve
