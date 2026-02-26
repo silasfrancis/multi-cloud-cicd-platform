@@ -1,9 +1,7 @@
 postgres:
   namespace: postgres-namespace
+  service: postgres-service
   replicas: 1
-  database: francis_db
   image: postgres:16
   migration_image: silasfrancis/db-migration-dev:e46aca1
-  password: francisdb
   port: 5432
-  user: francis_user

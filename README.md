@@ -98,8 +98,10 @@ Runtime workloads consume secrets synced by External Secrets Controller, which a
 │   └── react-recoil-realworld-example-app
 ├── helm
 │   ├── app
+│   ├── aws-gateway-controller
 │   ├── db
-│   └── platform
+│   ├── kong-gateway-controller
+│   └── vault-eso
 ├── terraform
 │   ├── aws_modules
 │   ├── env
@@ -113,7 +115,7 @@ Runtime workloads consume secrets synced by External Secrets Controller, which a
 - `argocd/` – GitOps application manifests per environment
 - `backend/` – FastAPI application and database migration files
 - `frontend/` – React frontend implementations
-- `helm/` – Helm charts for application, database, and platform components (Gateway Class, Gateway API and HTTP Routes)
+- `helm/` – Helm charts for application, database,platform components (Gateway Class, Gateway API and HTTP Routes) and External Secret Operator configurations for Hashicorp vault.
 - `terraform/` – Infrastructure modules and environment definitions
 - `docs/` – Architecture notes and design documentation
 - `utils/` – Tasks used by Git actions

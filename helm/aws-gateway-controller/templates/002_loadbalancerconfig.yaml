@@ -1,0 +1,25 @@
+apiVersion: gateway.k8s.aws/v1beta1
+kind: LoadBalancerConfiguration
+metadata:
+  name: {{ .Values.alb.config.name }}
+  namespace: {{ .Values.apps.namespace }}
+spec:
+  scheme: internet-facing
+  ipAddressType: ipv4
+  loadBalancerName: {{ .Values.alb.config.loadbalancer_name }}
+
+  loadBalancerSubnets:
+    - identifier: subnet-0a1b2c3d4e5f6g7h8
+    - identifier: subnet-0123456789abcdef0
+    
+  securityGroups:
+    - sg-08e7d6c5b4a3f2e1d 
+
+  loadBalancerAttributes:
+    - key: deletion_protection.enabled
+      value: "false"
+    - key: idle_timeout.timeout_seconds
+      value: "60"
+
+  tags:
+    Environment: production

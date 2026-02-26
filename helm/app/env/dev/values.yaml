@@ -23,7 +23,4 @@ apps:
         memory: 1Gi
 postgres:
   namespace: postgres-namespace
-  database: francis_db
-  password: francisdb
-  port: 5432
-  user: francis_user
+  service: postgres-service

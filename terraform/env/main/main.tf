@@ -1,12 +1,12 @@
 terraform {
-  # backend "s3" {
-  #   bucket = "k8-main-cluster-silas-main"
-  #   key = "main/terraform.tfstate"
-  #   region = "us-east-2"
-  #   dynamodb_table = ""
-  #   encrypt = true
+  backend "s3" {
+    bucket = "k8-main-cluster-silas-main"
+    key = "main/terraform.tfstate"
+    region = "us-east-2"
+    dynamodb_table = ""
+    encrypt = true
     
-  # }
+  }
 
   required_providers {
     aws = {
@@ -63,6 +63,14 @@ module "eks" {
     module.iam
   ]
 
+}
+
+module "iam_aws_lb_controller_k8" {
+  source = "../../aws_modules/iam_aws_lb_controller_k8"
+
+  eks_cluster_oidc_issuer = module.eks.eks_cluster_oidc_issuer
+  service_account_name = "aws-load-balancer-controller"
+  service_account_namespace = "kube-system"
 }
 
 module "ecr" {
