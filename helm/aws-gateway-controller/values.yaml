@@ -1,0 +1,22 @@
+apps:
+  namespace: apps-namespace
+  fastapi:
+    service: fastapi-service
+  react_recoil:
+    service: react-recoil-service
+
+gateway_class:
+  name: aws-alb-gateway-class
+
+alb:
+  config: 
+    name: alb-config
+    loadbalancer_name: cluster-load-balancer
+
+gateway:
+  name:  aws-alb-gateway
+
+http_route:
+  hostnames:
+    api: "api.lefrancis.org"
+    app: "app.lefrancis.org"

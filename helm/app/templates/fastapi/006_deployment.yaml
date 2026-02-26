@@ -46,15 +46,9 @@ spec:
                   name: fastapi-secrets
                   key: JWT_SECRET_KEY
             - name: POSTGRES_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: fastapi-secrets
-                  key: POSTGRES_HOST
+              value: "postgresql://{{ .Values.postgres.service }}.{{ .Values.postgres.namespace }}.svc.cluster.local"
             - name: POSTGRES_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: fastapi-secrets
-                  key: POSTGRES_PORT
+              value: 5432
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:

@@ -6,7 +6,7 @@ apps:
     service: react-recoil-service
 
 gateway_class:
-  name: kong
+  name: kong-gatewayclass
 
 gateway:
   name: kong_gateway_api
