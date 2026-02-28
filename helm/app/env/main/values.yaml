@@ -1,5 +1,4 @@
-env: main
-
+vault_key_path: aws/eks 
 apps:
   namespace: apps-namespace
   fastapi:

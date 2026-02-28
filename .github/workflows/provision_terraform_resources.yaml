@@ -34,6 +34,17 @@ jobs:
           aws-region: us-east-2
 
       - name: Load AWS creds from Secrets Manager
+        if: github.ref_name == 'dev'
+        run: |
+          SECRET=$(aws secretsmanager get-secret-value \
+            --secret-id basic_secrets \
+            --query SecretString \
+            --output text)
+
+          echo "LINODE_TOKEN=$(echo $SECRET | jq -r .LINODE_TOKEN)" >> $GITHUB_ENV
+
+      - name: Load AWS creds from Secrets Manager
+        if: github.ref_name == 'main'
         run: |
           SECRET=$(aws secretsmanager get-secret-value \
             --secret-id basic_secrets \
@@ -42,9 +53,7 @@ jobs:
 
           echo "AWS_ACCESS_KEY_ID=$(echo $SECRET | jq -r .AWS_ACCESS_KEY_ID)" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=$(echo $SECRET | jq -r .AWS_SECRET_ACCESS_KEY)" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=$(echo $SECRET | jq -r .AWS_SESSION_TOKEN)" >> $GITHUB_ENV
           echo "AWS_REGION=us-east-2" >> $GITHUB_ENV
-
 
       # Dev (Linode)
       - name: Terraform Plan Dev

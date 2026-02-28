@@ -1,10 +1,10 @@
 version: "3"
 
-variables:
+vars:
   CLUSTER_NAME_DEV: k8-dev-cluster
   CLUSTER_NAME_MAIN: k8-main-cluster
   IRSA_SERVICE_ACCOUNT_NAME: aws-load-balancer-controller
-  IRS_SERVICE_ACCOUNT_NAMESPACE: kube-system
+  IRSA_SERVICE_ACCOUNT_NAMESPACE: kube-system
   ENV: dev
 
 tasks:
@@ -14,11 +14,11 @@ tasks:
       |
       helm repo add external-secrets https://charts.external-secrets.io
 
-      helm install external-secrets \
+      helm upgrade --install external-secrets \
         external-secrets/external-secrets \
           -n external-secrets \
-          --create-namespace 
-          #--set installCRDs=false
+          --create-namespace \
+          --set installCRDs=true
 
   2:cert_manager:install:
     desc: Install Cert Manager for TLS certificate configuration
@@ -49,10 +49,10 @@ tasks:
       - helm repo add eks https://aws.github.io/eks-charts
       - |
         helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
-          -n ${IRS_SERVICE_ACCOUNT_NAMESPACE} \
-          --set clusterName=${CLUSTER_NAME_MAIN} \
+          -n {{.IRSA_SERVICE_ACCOUNT_NAMESPACE}} \
+          --set clusterName={{.CLUSTER_NAME_MAIN}} \
           --set serviceAccount.create=false \
-          --set serviceAccount.name=${IRSA_SERVICE_ACCOUNT_NAME}
+          --set serviceAccount.name={{.IRSA_SERVICE_ACCOUNT_NAME}}
 
 # Helm
   1:apply_namespaces:
@@ -63,7 +63,7 @@ tasks:
     cmd:
         |
           helm upgrade --install vault-eso vault-eso \
-          -f vault-eso/env/${ENV}/values.yaml \
+          -f vault-eso/env/{{.ENV}}/values.yaml \
           -n apps-namespace \
           --create-namespace
 
@@ -71,7 +71,7 @@ tasks:
     cmd:
         |
          helm upgrade --install  app app \
-          -f app/env/${ENV}/values.yaml \
+          -f app/env/{{.ENV}}/values.yaml \
           -n apps-namespace \
           --create-namespace
 
@@ -79,7 +79,7 @@ tasks:
     cmd:
         |
          helm upgrade --install  db db \
-          -f db/env/${ENV}/values.yaml \
+          -f db/env/{{.ENV}}/values.yaml \
           -n postgres-namespace \
           --create-namespace
 

@@ -1,4 +1,4 @@
-env: dev
+vault_key_path: linode/lke
 apps:
   namespace: apps-namespace
   fastapi:

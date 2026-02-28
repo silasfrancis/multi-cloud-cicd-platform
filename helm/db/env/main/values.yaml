@@ -1,10 +1,8 @@
+vault_key_path: aws/eks 
 postgres:
   namespace: postgres-namespace
   replicas: 2
-  database: francis_db
   image: postgres:16
   migration_image: silasfrancis/db-migration-main
   migration_image_tag: e61dec3-0000-ge61dec3
-  password: francisdb
   port: 5432
-  user: francis_user

@@ -1,12 +1,12 @@
 terraform {
-  backend "remote" {
-    organization = "silasfrancis"
+  # backend "remote" {
+  #   organization = "silasfrancis"
 
-    workspaces {
-      name = "silasfrancis-workspace"
-    }
+  #   workspaces {
+  #     name = "silasfrancis-workspace"
+  #   }
     
-  }
+  # }
 
   required_providers {
     linode = {
@@ -21,7 +21,7 @@ provider "linode" {
 
 locals {
   environment = "dev"
-  cluster_name = "k8-main-cluster"
+  cluster_name = "k8-dev-cluster"
   region = "us-lax"
 }
 
