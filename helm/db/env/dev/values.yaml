@@ -1,3 +1,4 @@
+vault_key_path: linode/lke
 postgres:
   namespace: postgres-namespace
   service: postgres-service
