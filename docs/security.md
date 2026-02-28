@@ -1,5 +1,7 @@
 # Security Model
 
+> **Note**: For architectural context, see [architecture.md](architecture.md). For getting started, see the [root README](../README.md).
+
 ## Security Principles
 
 This platform is designed around the following principles:
@@ -77,4 +79,7 @@ Vault → External Secrets Controller → Kubernetes Secret → Application Pod
 - No cloud IAM credentials are available  
 - No direct access to Vault or other secrets backends  
 
----
+## Related Documentation
+
+- [← Back to README](../README.md)
+- [← architecture.md](architecture.md)

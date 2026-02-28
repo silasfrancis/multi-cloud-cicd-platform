@@ -1,5 +1,7 @@
 # Architecture Overview
 
+> **Note**: For security-specific details, see [security.md](security.md). For getting started, see the [root README](../README.md).
+
 ## System Overview
 
 This platform is a production-style, multi-cloud CI/CD reference architecture designed to demonstrate secure delivery of containerized applications across isolated environments.
@@ -111,3 +113,8 @@ Client → ALB Gateway (Gateway API)
 
 
 Terraform is executed via CI to manage infrastructure, while ArgoCD continuously reconciles application state from Git.
+
+## Related Documentation
+
+- [← Back to README](../README.md)
+- [security.md→](security.md)
