@@ -4,7 +4,7 @@ metadata:
   name: my-app-tls
   namespace: apps-namespace
 spec:
-  secretName: my-app-tls-secret
+  secretName: tls-secret
   dnsNames:
     - api.lefrancis.org
     - app.lefrancis.org

@@ -36,7 +36,7 @@ tasks:
           --version 0.12.0 \
           --set ingressController.enabled=false \
           --set gatewayController.enabled=true \
-          --set proxy.type=LoadBalancer
+          --set proxy.type=LoadBalancer        
 
   4:apply_irsa_for_aws_lb_ingress_controller:
     desc: Apply IRSA for AWS LB Ingress controller
@@ -84,7 +84,7 @@ tasks:
           --create-namespace
 
   5:apply_kong_gateway_configs_for_app:
-    description: Install kong gateway ingress controller for linode cluster
+    desc: Install kong gateway ingress controller for linode cluster
     cmd:
         |
           helm upgrade --install kong-gateway-controller kong-gateway-controller \
@@ -93,7 +93,7 @@ tasks:
           --create-namespace
 
   6:apply_aws_lb_gateway_configs_for_app:
-    description: Install kong gateway ingress controller for linode cluster
+    desc: Install kong gateway ingress controller for linode cluster
     cmd:
         |
           helm upgrade --install kong-gateway-controller kong-gateway-controller \
@@ -102,7 +102,7 @@ tasks:
           --create-namespace
 
   7:apply_certificate_issuer:
-    cmd: kubectl apply -f 002_certificate_issuer.yaml
+    cmd: kubectl apply -f 003_certificate_issuer.yaml
 
   8:apply_certificate:
-    cmd: kubectl apply -f 003_certificate.yaml
+    cmd: kubectl apply -f 004_certificate.yaml

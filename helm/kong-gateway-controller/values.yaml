@@ -9,7 +9,7 @@ gateway_class:
   name: kong-gatewayclass
 
 gateway:
-  name: kong_gateway_api
+  name: kong-gateway-api
 
 http_route:
   hostnames:
