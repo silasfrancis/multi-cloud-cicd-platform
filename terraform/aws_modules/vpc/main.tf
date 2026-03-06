@@ -48,7 +48,6 @@ resource "aws_security_group" "security_group" {
 
 resource "aws_security_group_rule" "ingress_rule_internal" {
     type = "ingress"
-    description = "Allow HTTP traffic from anywhere"
     from_port = 0
     to_port = 0
     protocol = "-1"
